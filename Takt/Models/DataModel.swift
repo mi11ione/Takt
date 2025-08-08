@@ -10,6 +10,8 @@ enum DataModelSchema {
     static let current = Schema([
         Habit.self,
         HabitEntry.self,
+        Chain.self,
+        ChainItem.self,
     ])
 }
 

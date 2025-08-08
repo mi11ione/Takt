@@ -115,7 +115,7 @@ struct PaywallView: View {
                     .font(.footnote)
                     .foregroundStyle(Color("OnSurfaceSecondary"))
 
-                    Text("·").foregroundStyle(Color("OnSurfaceSecondary"))
+                    Text("|").foregroundStyle(Color("OnSurfaceSecondary"))
 
                     Link(destination: URL(string: "https://takt.app/terms")!) {
                         Text("settings_terms")

@@ -7,15 +7,9 @@ struct MicroTimerView: View {
 
     let habit: Habit
 
-    @State private var remaining: Int
-    @State private var isRunning: Bool = true
     @State private var didComplete: Bool = false
     @State private var didStart: Bool = false
-
-    init(habit: Habit) {
-        self.habit = habit
-        _remaining = State(initialValue: max(10, habit.defaultDurationSeconds))
-    }
+    @State private var localPaused: Bool = false
 
     var body: some View {
         ZStack {
@@ -32,8 +26,8 @@ struct MicroTimerView: View {
                             .fill(LinearGradient.primary.opacity(0.15))
                             .frame(width: 120, height: 120)
                             .blur(radius: 20)
-                            .scaleEffect(isRunning ? 1.1 : 1)
-                            .animation(.easeInOut(duration: 2).repeatForever(autoreverses: true), value: isRunning)
+                            .scaleEffect(TimerStore.shared.isRunning && !localPaused ? 1.1 : 1)
+                            .animation(.easeInOut(duration: 2).repeatForever(autoreverses: true), value: TimerStore.shared.isRunning && !localPaused)
 
                         Text(habit.emoji)
                             .font(.system(size: 80))
@@ -69,11 +63,11 @@ struct MicroTimerView: View {
                         )
                         .rotationEffect(.degrees(-90))
                         .frame(width: 250, height: 250)
-                        .animation(.easeInOut(duration: 0.5), value: remaining)
+                        .animation(.easeInOut(duration: 0.5), value: TimerStore.shared.remainingSeconds)
                         .shadow(color: Color("PrimaryColor").opacity(0.18), radius: 6, x: 0, y: 0)
 
                     // Pulsing effect when running
-                    if isRunning {
+                    if TimerStore.shared.isRunning, !localPaused {
                         Circle()
                             .stroke(LinearGradient.primary.opacity(0.3), lineWidth: 30)
                             .frame(width: 250, height: 250)
@@ -94,13 +88,13 @@ struct MicroTimerView: View {
                             .contentTransition(.numericText())
                             .foregroundStyle(
                                 LinearGradient(
-                                    colors: remaining <= 10 ? [Color("Warning"), Color("SecondaryColor")] : [Color("PrimaryColor"), Color("SecondaryColor")],
+                                    colors: TimerStore.shared.remainingSeconds <= 10 ? [Color("Warning"), Color("SecondaryColor")] : [Color("PrimaryColor"), Color("SecondaryColor")],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 )
                             )
 
-                        Text(isRunning ? "Focus Time" : "Paused")
+                        Text(TimerStore.shared.isRunning && !localPaused ? "Focus Time" : "Paused")
                             .font(.headline)
                             .foregroundStyle(.secondary)
                             .transition(.scale.combined(with: .opacity))
@@ -114,7 +108,8 @@ struct MicroTimerView: View {
                 // Control buttons (equal size, spacing 30): Cancel (red), Pause/Play (yellow), Done (green)
                 HStack(spacing: 30) {
                     Button {
-                        // Cancel timer
+                        // Cancel timer completely
+                        TimerStore.shared.cancel()
                         Task { await HabitActivityManager.shared.end() }
                         dismiss()
                     } label: {
@@ -125,10 +120,15 @@ struct MicroTimerView: View {
 
                     Button {
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                            isRunning.toggle()
+                            localPaused.toggle()
+                            if localPaused {
+                                TimerStore.shared.pause()
+                            } else {
+                                TimerStore.shared.resume()
+                            }
                         }
                     } label: {
-                        Image(systemName: isRunning ? "pause.fill" : "play.fill")
+                        Image(systemName: localPaused ? "play.fill" : "pause.fill")
                             .font(.title2)
                     }
                     .buttonStyle(IconButtonStyle(size: 60, backgroundColor: Color("Warning")))
@@ -149,40 +149,39 @@ struct MicroTimerView: View {
         .ignoresSafeArea()
         .navigationBarTitleDisplayMode(.inline)
         .sensoryFeedback(.success, trigger: didComplete)
-        .sensoryFeedback(.impact(weight: .light), trigger: isRunning)
-        .task(id: isRunning) { await runIfNeeded() }
+        .sensoryFeedback(.impact(weight: .light), trigger: localPaused)
         .task {
             withAnimation(.spring(response: 0.8, dampingFraction: 0.7).delay(0.2)) {
                 didStart = true
             }
-            // Keep TimerStore in sync for widget overlay when sheet is dismissed
-            TimerStore.shared.start(for: habit, seconds: total)
+            // Sync with timer state
+            localPaused = !TimerStore.shared.isRunning
+        }
+        .onChange(of: TimerStore.shared.remainingSeconds) { _, newValue in
+            // Check if timer completed naturally
+            if newValue <= 0, TimerStore.shared.activeHabit != nil {
+                finishAndLog()
+            }
+        }
+        .onDisappear {
+            // Don't log anything when sheet is dismissed - timer continues in background
         }
     }
 
-    private var total: Int { max(10, habit.defaultDurationSeconds) }
-    private var progress: CGFloat { 1 - CGFloat(remaining) / CGFloat(total) }
-    private var timeString: String { String(format: "%02d:%02d", remaining / 60, remaining % 60) }
+    private var progress: CGFloat {
+        guard TimerStore.shared.totalSeconds > 0 else { return 0 }
+        return 1 - CGFloat(TimerStore.shared.remainingSeconds) / CGFloat(TimerStore.shared.totalSeconds)
+    }
 
-    private func runIfNeeded() async {
-        guard isRunning else { return }
-        let initial = total
-        while remaining > 0, isRunning {
-            try? await Task.sleep(nanoseconds: 1_000_000_000)
-            if !isRunning { break }
-            remaining -= 1
-            let progress = 1 - Double(remaining) / Double(initial)
-            await HabitActivityManager.shared.updateProgress(progress)
-        }
-        if remaining <= 0 { finishAndLog() }
+    private var timeString: String {
+        let remaining = TimerStore.shared.remainingSeconds
+        return String(format: "%02d:%02d", remaining / 60, remaining % 60)
     }
 
     private func finishAndLog() {
-        let entry = HabitEntry(performedAt: .now, durationSeconds: total, habit: habit)
-        context.insert(entry)
-        try? context.save()
+        // Use completeAndLog from TimerStore to ensure proper cleanup
+        TimerStore.shared.completeAndLog(using: context)
         didComplete = true
-        Task { await HabitActivityManager.shared.end() }
         dismiss()
     }
 }

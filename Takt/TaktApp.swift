@@ -46,14 +46,28 @@ private extension TaktApp {
             Chain.self,
             ChainItem.self,
         ])
-        if let container = try? ModelContainer(for: schema) {
+
+        do {
+            // Create a persistent store configuration
+            let storeURL = URL.applicationSupportDirectory.appending(path: "Takt.sqlite")
+            let configuration = ModelConfiguration(url: storeURL, allowsSave: true)
+            let container = try ModelContainer(for: schema, configurations: [configuration])
+
+            // Ensure the directory exists
+            try FileManager.default.createDirectory(at: URL.applicationSupportDirectory, withIntermediateDirectories: true)
+
             return container
+        } catch {
+            // Log the error for debugging
+            print("Failed to create ModelContainer: \(error)")
+
+            // Try without custom configuration as fallback
+            do {
+                return try ModelContainer(for: schema)
+            } catch {
+                print("Failed to create default ModelContainer: \(error)")
+                preconditionFailure("Failed to initialize SwiftData ModelContainer: \(error)")
+            }
         }
-        // Fallback to an in‑memory store to keep the app usable in development.
-        let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
-        if let inMemory = try? ModelContainer(for: schema, configurations: configuration) {
-            return inMemory
-        }
-        preconditionFailure("Failed to initialize SwiftData ModelContainer")
     }
 }

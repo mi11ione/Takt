@@ -14,8 +14,9 @@ struct HabitListView: View {
     @State private var showPaywall: Bool = false
     @State private var timerHabit: Habit?
     @State private var showTimerSheet: Bool = false
-    @State private var recommended: Habit?
-    @State private var recommendedMany: [Habit] = []
+    @State private var currentSuggestion: TemplateLibrary.Template?
+    @State private var showSuggestion: Bool = true
+    @State private var suggestionRefreshTimer: Int = 0
     @State private var tick: Int = 0
 
     @Environment(\.subscriptionManager) private var subscriptions
@@ -26,6 +27,26 @@ struct HabitListView: View {
 
     var body: some View {
         List {
+            // Show suggestion at the top if we have habits
+            if !habits.isEmpty, showSuggestion {
+                Section {
+                    HabitSuggestionView(
+                        suggestion: currentSuggestion,
+                        onAdd: {
+                            refreshSuggestion()
+                        },
+                        onDismiss: {
+                            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                                showSuggestion = false
+                            }
+                        }
+                    )
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                }
+            }
+
             if habits.isEmpty {
                 Section {
                     VStack(spacing: 20) {
@@ -143,21 +164,51 @@ struct HabitListView: View {
         }
         .sheet(item: Binding(get: { timerHabit }, set: { timerHabit = $0 })) { item in
             NavigationStack { MicroTimerView(habit: item) }
+                .onDisappear {
+                    // Clear timerHabit so inline widget shows again
+                    timerHabit = nil
+                }
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
         }
-        .onAppear { ensureABBucket() }
-        .task(id: habits.count + tick) { /* recommendations removed */ }
+        .onAppear {
+            ensureABBucket()
+            refreshSuggestion()
+        }
+        .task(id: habits.count + suggestionRefreshTimer) {
+            refreshSuggestion()
+        }
         .task(id: TimerStore.shared.remainingSeconds) {
             // Nudge the view to refresh overlay progress roughly once a second
             tick = Int.random(in: 0 ... Int.max)
         }
         .task {
             // Lightweight ticker to keep overlay fresh without Combine
-            while true {
-                try? await Task.sleep(nanoseconds: 1_000_000_000)
+            while !Task.isCancelled {
+                do {
+                    try await Task.sleep(nanoseconds: 1_000_000_000)
+                } catch {
+                    break // Cancelled
+                }
+                if Task.isCancelled { break }
                 tick &+= 1
+            }
+        }
+        .task {
+            // Refresh suggestions every 2-3 minutes
+            while !Task.isCancelled {
+                do {
+                    try await Task.sleep(nanoseconds: UInt64.random(in: 120_000_000_000 ... 180_000_000_000)) // 2-3 minutes
+                } catch {
+                    break // Cancelled
+                }
+                if Task.isCancelled { break }
+                if showSuggestion {
+                    withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
+                        suggestionRefreshTimer &+= 1
+                    }
+                }
             }
         }
     }
@@ -279,6 +330,12 @@ struct HabitListView: View {
         let ordered = chain.items.sorted { $0.order < $1.order }
         if let idx = ordered.firstIndex(where: { $0.habit?.id == habit.id }) { return (chain, idx) }
         return nil
+    }
+
+    private func refreshSuggestion() {
+        withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
+            currentSuggestion = TemplateLibrary.shared.getRandomSuggestion(excludingHabits: habits)
+        }
     }
 }
 
@@ -409,6 +466,7 @@ private struct InlineTimerWidget: View {
     var onTap: () -> Void = {}
     @State private var animate = false
     @Environment(\.modelContext) private var context
+    @Environment(\.analytics) private var analytics
 
     var body: some View {
         Card(style: .glass) {
@@ -435,14 +493,19 @@ private struct InlineTimerWidget: View {
 
                 HStack(spacing: 12) {
                     Button {
-                        if TimerStore.shared.isRunning { TimerStore.shared.pause() } else { TimerStore.shared.resume() }
+                        // Cancel timer without logging
+                        TimerStore.shared.cancel()
+                        analytics.log(event: "timer_cancelled_inline", ["habitId": habit.id.uuidString])
                     } label: {
-                        Image(systemName: TimerStore.shared.isRunning ? "pause.fill" : "play.fill")
+                        Image(systemName: "xmark")
+                            .fontWeight(.medium)
                     }
-                    .buttonStyle(IconButtonStyle(size: 40, backgroundColor: Color("SecondaryColor")))
+                    .buttonStyle(IconButtonStyle(size: 40, backgroundColor: Color("Danger")))
 
                     Button {
+                        // Complete and log the timer
                         TimerStore.shared.completeAndLog(using: context)
+                        analytics.log(event: "timer_completed_inline", ["habitId": habit.id.uuidString])
                     } label: {
                         Image(systemName: "checkmark")
                             .fontWeight(.bold)

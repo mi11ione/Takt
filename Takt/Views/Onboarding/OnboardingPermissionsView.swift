@@ -89,7 +89,7 @@ struct OnboardingPermissionsView: View {
 
                 VStack(spacing: 16) {
                     NavigationLink("onb_continue") {
-                        OnboardingPaywallView()
+                        PaywallView()
                     }
                     .buttonStyle(BouncyButtonStyle())
 
