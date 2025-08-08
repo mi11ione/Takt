@@ -63,7 +63,7 @@ struct HabitListHeaderView: View {
                 .padding(.vertical, 16)
             }
             .frame(height: 90)
-            .shadow(color: Color("PrimaryColor").opacity(0.1), radius: 10, y: 5)
+            .shadow(color: Color("PrimaryColor").opacity(0.07), radius: 6, y: 3)
             .onAppear {
                 isAnimating = true
             }

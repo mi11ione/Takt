@@ -7,12 +7,12 @@ struct PrimaryButtonStyle: ButtonStyle {
         configuration.label
             .font(isCompact ? .subheadline : .body)
             .fontWeight(.semibold)
-            .padding(.horizontal, isCompact ? 16 : 24)
-            .padding(.vertical, isCompact ? 10 : 14)
+            .padding(.horizontal, isCompact ? 14 : 20)
+            .padding(.vertical, isCompact ? 9 : 12)
             .background(LinearGradient.primary)
             .foregroundStyle(.white)
             .clipShape(Capsule())
-            .shadow(color: Color("PrimaryColor").opacity(0.3), radius: configuration.isPressed ? 4 : 12, y: configuration.isPressed ? 2 : 6)
+            .shadow(color: Color("PrimaryColor").opacity(0.18), radius: configuration.isPressed ? 3 : 8, y: configuration.isPressed ? 1 : 4)
             .scaleEffect(configuration.isPressed ? 0.95 : 1)
             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: configuration.isPressed)
             .sensoryFeedback(.impact(weight: .medium), trigger: configuration.isPressed)
@@ -26,17 +26,17 @@ struct SecondaryButtonStyle: ButtonStyle {
         configuration.label
             .font(isCompact ? .subheadline : .body)
             .fontWeight(.medium)
-            .padding(.horizontal, isCompact ? 14 : 20)
-            .padding(.vertical, isCompact ? 8 : 12)
-            .background(.ultraThinMaterial)
-            .background(LinearGradient.subtle.opacity(0.3))
+            .padding(.horizontal, isCompact ? 12 : 18)
+            .padding(.vertical, isCompact ? 7 : 10)
+            .background(.thinMaterial)
+            .background(LinearGradient.subtle.opacity(0.18))
             .overlay(
                 Capsule()
                     .stroke(
                         LinearGradient(
                             colors: [
                                 Color.white.opacity(0.3),
-                                Color.white.opacity(0.1),
+                                Color.white.opacity(0.12),
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -45,7 +45,7 @@ struct SecondaryButtonStyle: ButtonStyle {
                     )
             )
             .clipShape(Capsule())
-            .shadow(color: Color("PrimaryColor").opacity(0.1), radius: 8, y: 4)
+            .shadow(color: Color("PrimaryColor").opacity(0.07), radius: 6, y: 3)
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
             .opacity(configuration.isPressed ? 0.9 : 1)
             .animation(.spring(response: 0.3, dampingFraction: 0.8), value: configuration.isPressed)
@@ -56,7 +56,7 @@ struct SecondaryButtonStyle: ButtonStyle {
 // Icon Button Style
 struct IconButtonStyle: ButtonStyle {
     var size: CGFloat = 44
-    var backgroundColor: Color = .init("Primary")
+    var backgroundColor: Color = .init("PrimaryColor")
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -71,7 +71,7 @@ struct IconButtonStyle: ButtonStyle {
                     ))
             )
             .foregroundStyle(.white)
-            .shadow(color: backgroundColor.opacity(0.3), radius: configuration.isPressed ? 2 : 8, y: configuration.isPressed ? 1 : 4)
+            .shadow(color: backgroundColor.opacity(0.18), radius: configuration.isPressed ? 2 : 6, y: configuration.isPressed ? 1 : 3)
             .scaleEffect(configuration.isPressed ? 0.92 : 1)
             .animation(.spring(response: 0.3, dampingFraction: 0.6), value: configuration.isPressed)
             .sensoryFeedback(.impact(weight: .light), trigger: configuration.isPressed)

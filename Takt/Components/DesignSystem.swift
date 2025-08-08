@@ -11,17 +11,17 @@ extension LinearGradient {
     )
 
     static let subtle = LinearGradient(
-        colors: [Color("PrimaryColor").opacity(0.15), Color("SecondaryColor").opacity(0.1)],
+        colors: [Color("PrimaryColor").opacity(0.08), Color("SecondaryColor").opacity(0.06)],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
 
     static let mesh = LinearGradient(
         colors: [
-            Color("PrimaryColor").opacity(0.3),
-            Color("SecondaryColor").opacity(0.2),
-            Color("GradientStart").opacity(0.1),
-            Color("GradientEnd").opacity(0.15),
+            Color("PrimaryColor").opacity(0.15),
+            Color("SecondaryColor").opacity(0.12),
+            Color("GradientStart").opacity(0.08),
+            Color("GradientEnd").opacity(0.10),
         ],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
@@ -48,7 +48,7 @@ struct GlassEffect: ViewModifier {
     func body(content: Content) -> some View {
         content
             .background(.ultraThinMaterial)
-            .background(LinearGradient.subtle.opacity(0.5))
+            .background(LinearGradient.subtle.opacity(0.2))
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .stroke(
@@ -64,7 +64,7 @@ struct GlassEffect: ViewModifier {
                     )
             )
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-            .shadow(color: Color("PrimaryColor").opacity(0.1), radius: 10, x: 0, y: 4)
+            .shadow(color: Color("PrimaryColor").opacity(0.06), radius: 6, x: 0, y: 2)
     }
 }
 
@@ -90,8 +90,8 @@ struct ModernCard<Content: View>: View {
     var body: some View {
         content
             .padding(16)
-            .background(.regularMaterial)
-            .background(gradient.opacity(0.3))
+            .background(.thinMaterial)
+            .background(gradient.opacity(0.14))
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .stroke(
@@ -107,8 +107,7 @@ struct ModernCard<Content: View>: View {
                     )
             )
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
-            .shadow(color: Color("PrimaryColor").opacity(0.15), radius: 12, x: 0, y: 6)
-            .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+            .shadow(color: Color("PrimaryColor").opacity(0.08), radius: 8, x: 0, y: 3)
     }
 }
 
@@ -132,7 +131,7 @@ struct FloatingActionButton: View {
                     .fill(LinearGradient.primary)
                     .frame(width: 56, height: 56)
                     .scaleEffect(isPressed ? 0.9 : 1)
-                    .shadow(color: Color("PrimaryColor").opacity(0.4), radius: isPressed ? 8 : 16, y: isPressed ? 4 : 8)
+                    .shadow(color: Color("PrimaryColor").opacity(0.22), radius: isPressed ? 6 : 10, y: isPressed ? 3 : 5)
 
                 Image(systemName: icon)
                     .font(.title2)
@@ -170,21 +169,21 @@ struct AnimatedMeshBackground: View {
                     .fill(
                         RadialGradient(
                             colors: [
-                                index == 0 ? Color("PrimaryColor").opacity(0.3) :
-                                    index == 1 ? Color("SecondaryColor").opacity(0.3) :
-                                    Color("GradientEnd").opacity(0.3),
+                                index == 0 ? Color("PrimaryColor").opacity(0.12) :
+                                    index == 1 ? Color("SecondaryColor").opacity(0.12) :
+                                    Color("GradientEnd").opacity(0.12),
                                 Color.clear,
                             ],
                             center: .center,
                             startRadius: 0,
-                            endRadius: 150
+                            endRadius: 120
                         )
                     )
-                    .frame(width: 300, height: 300)
-                    .blur(radius: 50)
+                    .frame(width: 280, height: 280)
+                    .blur(radius: 40)
                     .offset(
-                        x: animate ? CGFloat.random(in: -100 ... 100) : CGFloat.random(in: -50 ... 50),
-                        y: animate ? CGFloat.random(in: -100 ... 100) : CGFloat.random(in: -50 ... 50)
+                        x: animate ? CGFloat.random(in: -60 ... 60) : CGFloat.random(in: -30 ... 30),
+                        y: animate ? CGFloat.random(in: -60 ... 60) : CGFloat.random(in: -30 ... 30)
                     )
                     .animation(
                         .easeInOut(duration: Double.random(in: 8 ... 12))
@@ -197,7 +196,7 @@ struct AnimatedMeshBackground: View {
             // Noise texture overlay
             Rectangle()
                 .fill(.ultraThinMaterial)
-                .opacity(0.5)
+                .opacity(0.2)
         }
         .ignoresSafeArea()
         .onAppear { animate = true }
@@ -252,7 +251,7 @@ struct BouncyButtonStyle: ButtonStyle {
             .foregroundStyle(.white)
             .fontWeight(.semibold)
             .clipShape(Capsule())
-            .shadow(color: Color("PrimaryColor").opacity(0.3), radius: configuration.isPressed ? 4 : 12, y: configuration.isPressed ? 2 : 6)
+            .shadow(color: Color("PrimaryColor").opacity(0.18), radius: configuration.isPressed ? 3 : 8, y: configuration.isPressed ? 1 : 4)
             .scaleEffect(configuration.isPressed ? 0.95 : 1)
             .animation(.spring(response: 0.3, dampingFraction: 0.7), value: configuration.isPressed)
             .sensoryFeedback(.impact(weight: .medium), trigger: configuration.isPressed)
@@ -267,7 +266,7 @@ struct GlassButtonStyle: ButtonStyle {
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
             .background(.ultraThinMaterial)
-            .background(LinearGradient.subtle.opacity(0.3))
+            .background(LinearGradient.subtle.opacity(0.18))
             .overlay(
                 Capsule()
                     .stroke(
@@ -283,7 +282,7 @@ struct GlassButtonStyle: ButtonStyle {
                     )
             )
             .clipShape(Capsule())
-            .shadow(color: Color("PrimaryColor").opacity(0.1), radius: 8, y: 4)
+            .shadow(color: Color("PrimaryColor").opacity(0.07), radius: 6, y: 3)
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
             .opacity(configuration.isPressed ? 0.9 : 1)
             .animation(.spring(response: 0.3, dampingFraction: 0.8), value: configuration.isPressed)

@@ -18,7 +18,7 @@ struct Card<Content: View>: View {
 
     var body: some View {
         content
-            .padding(16)
+            .padding(14)
             .background(backgroundView)
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .overlay(overlayView)
@@ -30,21 +30,21 @@ struct Card<Content: View>: View {
         switch style {
         case .elevated:
             RoundedRectangle(cornerRadius: 20)
-                .fill(.regularMaterial)
+                .fill(.thinMaterial)
                 .background(
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(LinearGradient.subtle.opacity(0.2))
+                        .fill(LinearGradient.subtle.opacity(0.14))
                 )
         case .glass:
             RoundedRectangle(cornerRadius: 20)
                 .fill(.ultraThinMaterial)
                 .background(
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(LinearGradient.mesh.opacity(0.15))
+                        .fill(LinearGradient.mesh.opacity(0.10))
                 )
         case .gradient:
             RoundedRectangle(cornerRadius: 20)
-                .fill(LinearGradient.primary.opacity(0.1))
+                .fill(LinearGradient.primary.opacity(0.12))
                 .background(
                     RoundedRectangle(cornerRadius: 20)
                         .fill(Color("Surface"))
@@ -62,8 +62,8 @@ struct Card<Content: View>: View {
                 .stroke(
                     LinearGradient(
                         colors: [
-                            Color.white.opacity(0.2),
-                            Color.white.opacity(0.05),
+                            Color.white.opacity(0.18),
+                            Color.white.opacity(0.06),
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -76,35 +76,35 @@ struct Card<Content: View>: View {
     private var shadowColor: Color {
         switch style {
         case .elevated, .glass:
-            Color("PrimaryColor").opacity(0.15)
+            Color("PrimaryColor").opacity(0.08)
         case .gradient:
-            Color("PrimaryColor").opacity(0.2)
+            Color("PrimaryColor").opacity(0.12)
         case .flat:
-            Color.black.opacity(0.05)
+            Color.black.opacity(0.04)
         }
     }
 
     private var shadowRadius: CGFloat {
         switch style {
         case .elevated:
-            12
+            8
         case .glass:
-            10
+            7
         case .gradient:
-            15
+            10
         case .flat:
-            4
+            3
         }
     }
 
     private var shadowY: CGFloat {
         switch style {
         case .elevated, .glass:
-            6
+            3
         case .gradient:
-            8
+            4
         case .flat:
-            2
+            1
         }
     }
 }

@@ -70,7 +70,7 @@ struct MicroTimerView: View {
                         .rotationEffect(.degrees(-90))
                         .frame(width: 250, height: 250)
                         .animation(.easeInOut(duration: 0.5), value: remaining)
-                        .shadow(color: Color("PrimaryColor").opacity(0.5), radius: 10, x: 0, y: 0)
+                        .shadow(color: Color("PrimaryColor").opacity(0.18), radius: 6, x: 0, y: 0)
 
                     // Pulsing effect when running
                     if isRunning {

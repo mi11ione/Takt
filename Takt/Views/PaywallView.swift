@@ -12,9 +12,9 @@ struct PaywallView: View {
     }
     
     var body: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: 20) {
             // Title section
-            VStack(spacing: 12) {
+            VStack(spacing: 10) {
                 Text("paywall_title")
                     .font(.largeTitle)
                     .fontWeight(.bold)
@@ -35,7 +35,7 @@ struct PaywallView: View {
             .offset(y: showContent ? 0 : -20)
             
             // Benefits
-            VStack(spacing: 12) {
+            VStack(spacing: 10) {
                 BenefitRow(
                     icon: "bolt.fill",
                     title: "paywall_benefit_speed",
@@ -58,7 +58,7 @@ struct PaywallView: View {
             .offset(y: showContent ? 0 : 20)
             
             // Pricing cards
-            VStack(spacing: 16) {
+            VStack(spacing: 14) {
                 // Annual plan
                 PricingCard(
                     isSelected: selectedPlan == .annual,
@@ -157,13 +157,13 @@ struct PricingCard: View {
                             
                             if let savings = savings {
                                 Text(savings)
-                                    .font(.caption)
+                                    .font(.caption2)
                                     .fontWeight(.medium)
                                     .padding(.horizontal, 8)
-                                    .padding(.vertical, 4)
+                                    .padding(.vertical, 3)
                                     .background(
                                         Capsule()
-                                            .fill(isSelected ? .white.opacity(0.2) : Color("Success").opacity(0.15))
+                                            .fill(isSelected ? .white.opacity(0.16) : Color("Success").opacity(0.12))
                                     )
                                     .foregroundStyle(isSelected ? .white : Color("Success"))
                             }
@@ -172,7 +172,7 @@ struct PricingCard: View {
                         Spacer()
                         
                         Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                            .font(.title2)
+                            .font(.title3)
                             .foregroundStyle(isSelected ? .white : Color("PrimaryColor"))
                     }
                 }

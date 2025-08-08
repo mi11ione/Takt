@@ -9,8 +9,8 @@ struct AppBackground: View {
             LinearGradient(
                 colors: [
                     Color("Surface"),
-                    Color("Surface").opacity(0.95),
-                    Color("PrimaryColor").opacity(0.05),
+                    Color("Surface").opacity(0.97),
+                    Color("PrimaryColor").opacity(0.03),
                 ],
                 startPoint: .top,
                 endPoint: .bottom
@@ -32,8 +32,8 @@ struct AppBackground: View {
                             endRadius: 200
                         )
                     )
-                    .frame(width: 400, height: 400)
-                    .blur(radius: 70)
+                    .frame(width: 360, height: 360)
+                    .blur(radius: 60)
                     .offset(
                         x: animate ?
                             (index == 0 ? -100 : index == 1 ? 100 : 0) :
@@ -43,7 +43,7 @@ struct AppBackground: View {
                             (index == 0 ? 200 : index == 1 ? -200 : -100)
                     )
                     .animation(
-                        .easeInOut(duration: Double.random(in: 10 ... 15))
+                        .easeInOut(duration: Double.random(in: 12 ... 18))
                             .repeatForever(autoreverses: true)
                             .delay(Double(index) * 0.5),
                         value: animate
@@ -55,9 +55,9 @@ struct AppBackground: View {
                 .fill(
                     LinearGradient(
                         stops: [
-                            .init(color: Color("GradientStart").opacity(0.03), location: 0),
-                            .init(color: Color.clear, location: 0.3),
-                            .init(color: Color("GradientEnd").opacity(0.03), location: 0.7),
+                            .init(color: Color("GradientStart").opacity(0.02), location: 0),
+                            .init(color: Color.clear, location: 0.35),
+                            .init(color: Color("GradientEnd").opacity(0.02), location: 0.7),
                             .init(color: Color.clear, location: 1),
                         ],
                         startPoint: .topLeading,
@@ -66,7 +66,7 @@ struct AppBackground: View {
                 )
                 .rotationEffect(.degrees(animate ? 5 : -5))
                 .animation(
-                    .easeInOut(duration: 20)
+                    .easeInOut(duration: 28)
                         .repeatForever(autoreverses: true),
                     value: animate
                 )
@@ -74,7 +74,7 @@ struct AppBackground: View {
             // Subtle noise texture
             Rectangle()
                 .fill(.ultraThinMaterial)
-                .opacity(0.05)
+                .opacity(0.04)
         }
         .ignoresSafeArea()
         .onAppear { animate = true }
