@@ -3,11 +3,24 @@ import SwiftUI
 
 struct WeeklyInsightsView: View {
     @Query private var entries: [HabitEntry]
+    @Query private var habits: [Habit]
 
     var body: some View {
         List {
             Section(header: Text("insights_header")) {
                 summaryText()
+                if let hour = InsightsEngine().mostConsistentHour(entries: entries) {
+                    Text(String(format: NSLocalizedString("insights_best_hour", comment: ""), hour))
+                        .foregroundStyle(.secondary)
+                }
+            }
+            Section(header: Text("insights_highlights")) {
+                ForEach(habits, id: \.id) { habit in
+                    let longest = InsightsEngine().longestStreakDays(for: habit)
+                    if longest > 1 {
+                        HStack { Text(habit.emoji); Text(habit.name); Spacer(); Text("\(longest)d").foregroundStyle(.secondary) }
+                    }
+                }
             }
         }
         .navigationTitle(Text("insights_title"))

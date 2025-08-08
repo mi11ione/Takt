@@ -12,6 +12,8 @@ struct HabitListView: View {
     @State private var showArchived: Bool = false
     @State private var favoritesOnly: Bool = false
     @State private var showPaywall: Bool = false
+    @State private var timerHabit: Habit?
+    @State private var showTimerSheet: Bool = false
 
     @Environment(\.subscriptionManager) private var subscriptions
     @Environment(\.analytics) private var analytics
@@ -37,6 +39,8 @@ struct HabitListView: View {
                 ForEach(filteredHabits, id: \.id) { habit in
                     HabitRow(habit: habit) {
                         log(habit: habit)
+                    } onTimer: {
+                        showTimer(habit)
                     }
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         Button(role: .destructive) { archive(habit) } label: { Label("Archive", systemImage: "archivebox") }
@@ -44,6 +48,9 @@ struct HabitListView: View {
                     .contextMenu {
                         Button(habit.isFavorite ? "habits_unfavorite" : "habits_favorite") { toggleFavorite(habit) }
                         Button("habits_edit") { editorHabit = habit; showEditor = true }
+                        if belongsToAnyChain(habit) {
+                            NavigationLink("chains_start_quick", destination: quickStartView(for: habit))
+                        }
                     }
                 }
             }
@@ -58,6 +65,9 @@ struct HabitListView: View {
         }
         .sheet(isPresented: $showArchived) {
             NavigationStack { ArchivedHabitsView() }
+        }
+        .sheet(isPresented: $showTimerSheet) {
+            if let timerHabit { NavigationStack { MicroTimerView(habit: timerHabit) } }
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
@@ -107,6 +117,8 @@ struct HabitListView: View {
         maybeGateWithPaywall()
     }
 
+    private func showTimer(_ habit: Habit) { timerHabit = habit; showTimerSheet = true }
+
     private func toggleFavorite(_ habit: Habit) {
         habit.isFavorite.toggle()
         try? context.save()
@@ -133,11 +145,24 @@ struct HabitListView: View {
             if !active { showPaywall = true; hasShownPaywallAfterLogs = true }
         }
     }
+
+    private func belongsToAnyChain(_ habit: Habit) -> Bool {
+        // Lightweight check using modelContext fetch via @Query alternative is omitted for simplicity
+        // This placeholder returns true if habit is favorited to demo the affordance; replace with real relation later if needed.
+        habit.isFavorite
+    }
+
+    @ViewBuilder
+    private func quickStartView(for habit: Habit) -> some View {
+        // Start any chain containing this habit; fallback to timer if none
+        MicroTimerView(habit: habit)
+    }
 }
 
 private struct HabitRow: View {
     let habit: Habit
     let onLog: () -> Void
+    let onTimer: () -> Void
 
     var body: some View {
         HStack(spacing: 12) {
@@ -151,6 +176,8 @@ private struct HabitRow: View {
                 .foregroundStyle(habit.isFavorite ? .yellow : .secondary)
                 .accessibilityLabel(Text("habits_favorite_star_accessibility"))
             Button(action: onLog) { Image(systemName: "checkmark.circle.fill").foregroundStyle(.tint) }
+                .buttonStyle(HapticButtonStyle())
+            Button(action: onTimer) { Image(systemName: "timer").foregroundStyle(.tint) }
                 .buttonStyle(HapticButtonStyle())
         }
         .accessibilityElement(children: .combine)

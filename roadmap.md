@@ -34,6 +34,7 @@ This document lays out a comprehensive, end‑to‑end plan to evolve Takt from 
 - Phase A — COMPLETE: Habit library (create/edit/archive/favorites), one‑tap log, streaks, weekly insights (text), starter templates, toolbar navigation, A/B post‑3‑logs paywall, localization copy.
 - Phase B — COMPLETE: Chains (model + editor + list), run chain (step‑by‑step), navigation entry, full strings.
 - Nudges — BASELINE IMPLEMENTED: Daypart suggestions (morning/midday/afternoon/evening) via Settings notifications toggle; opt‑in authorization.
+ - Phase C — FUNCTIONAL: Micro‑timer with pause/resume/cancel/finish; logs completion; haptic success; Live Activity progress updates; widgets visual prepared; insights expanded with best‑hour and highlights. Widget/Live Activity targets to be added in a dedicated extension later per plan.
 
 ## Feature Themes (Overview)
 - Micro‑Habit Library & Builder

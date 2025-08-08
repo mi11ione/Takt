@@ -3,15 +3,7 @@ import SwiftUI
 
 struct HabitWidgetPlaceholderView: View {
     var body: some View {
-        VStack(spacing: 8) {
-            Image(systemName: "bolt")
-                .imageScale(.large)
-            Text("Widget Placeholder")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.quaternary)
+        HabitWidgetView(title: "widget_favorite_placeholder", emoji: "✨")
     }
 }
 

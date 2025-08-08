@@ -97,6 +97,8 @@
 "insights_weekly_zero" = "You haven’t logged any micro‑habits yet this week.";
 "insights_weekly_one" = "1 micro‑habit logged this week. Nice start.";
 "insights_weekly_multi" = "%d micro‑habits logged this week.";
+"insights_best_hour" = "Most consistent around %02d:00";
+"insights_highlights" = "Highlights";
 
 // Templates
 "templates_title" = "Starter Templates";
@@ -124,6 +126,16 @@
 "chain_log" = "Log";
 "chain_complete_message" = "Chain complete. That momentum is real.";
 "habits_nav_menu" = "Navigate";
+
+// Timer
+"timer_title" = "Micro‑Timer";
+"timer_pause" = "Pause";
+"timer_resume" = "Resume";
+"timer_cancel" = "Cancel";
+"timer_finish" = "Finish";
+
+// Widgets
+"widget_favorite_placeholder" = "Favorite Habit";
 
 // Shortcuts
 "shortcut_log_habit_title" = "Log Habit";
