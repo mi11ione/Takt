@@ -129,16 +129,15 @@ struct SettingsView: View {
                                     Divider()
 
                                     // Quiet hours redesigned (more usable): two aligned bordered chips with +/-
-                                    VStack(spacing: 8) {
+                                    VStack(spacing: 10) {
                                         HStack {
                                             Label("settings_quiet_hours", systemImage: "moon.zzz.fill")
                                                 .font(.subheadline)
                                             Spacer()
                                         }
 
-                                        HStack(spacing: 12) {
+                                        VStack(spacing: 8) {
                                             TimeChip(title: "Start", value: $quietStartHour)
-                                            Text("—").foregroundStyle(Color("OnSurfaceSecondary"))
                                             TimeChip(title: "End", value: $quietEndHour)
                                         }
                                     }

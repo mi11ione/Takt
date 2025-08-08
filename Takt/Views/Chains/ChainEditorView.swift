@@ -15,48 +15,79 @@ struct ChainEditorView: View {
     @State private var selected: [Habit] = []
 
     var body: some View {
-        Form {
-            Section(header: Text("chaineditor_basics")) {
-                TextField("chaineditor_name_placeholder", text: $name)
-                colorPicker
-            }
-            Section(header: Text("chaineditor_items")) {
-                if allHabits.isEmpty {
-                    Text("chaineditor_no_habits_hint").foregroundStyle(.secondary)
-                } else {
-                    // Selected (reorderable)
-                    if selected.isEmpty {
-                        Text("chaineditor_select_hint").foregroundStyle(.secondary)
-                    } else {
-                        List {
-                            ForEach(selected, id: \.id) { habit in
-                                HStack { Text(habit.emoji); Text(habit.name) }
-                            }
-                            .onMove { indices, newOffset in
-                                selected.move(fromOffsets: indices, toOffset: newOffset)
+        ScrollView {
+            VStack(spacing: 16) {
+                // Basics
+                Card(style: .glass) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("chaineditor_basics").font(.headline)
+                        TextField("chaineditor_name_placeholder", text: $name)
+                            .font(.title3)
+                            .padding(.vertical, 4)
+                        colorPicker
+                    }
+                }
+
+                // Selected items
+                Card(style: .glass) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("chaineditor_items").font(.headline)
+                        if selected.isEmpty {
+                            Text("chaineditor_select_hint").foregroundStyle(.secondary).frame(maxWidth: .infinity)
+                        } else {
+                            ForEach(selected.indices, id: \.self) { i in
+                                HStack {
+                                    Image(systemName: "line.3.horizontal").foregroundStyle(Color("OnSurfaceSecondary"))
+                                    Text(selected[i].emoji)
+                                    Text(selected[i].name)
+                                    Spacer()
+                                    Button(role: .destructive) { selected.remove(at: i) } label: { Image(systemName: "xmark.circle.fill") }
+                                        .foregroundStyle(Color("OnSurfaceSecondary"))
+                                }
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(.thinMaterial)
+                                .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color("Border"), lineWidth: 1))
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
                             }
                         }
-                        .frame(minHeight: 44)
                     }
-                    Divider()
-                    // Available to add
-                    ForEach(unselectedHabits, id: \.id) { habit in
-                        Button {
-                            add(habit)
-                        } label: {
-                            HStack { Text(habit.emoji); Text(habit.name); Spacer(); Image(systemName: "plus.circle") }
+                }
+
+                // Available habits grid
+                Card(style: .glass) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("templates_title").font(.headline)
+                        if allHabits.isEmpty {
+                            Text("chaineditor_no_habits_hint").foregroundStyle(.secondary)
+                        } else {
+                            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 2), spacing: 12) {
+                                ForEach(unselectedHabits, id: \.id) { habit in
+                                    Button { add(habit) } label: {
+                                        HStack(spacing: 10) {
+                                            Text(habit.emoji).font(.title2)
+                                            Text(habit.name).font(.body).lineLimit(1)
+                                            Spacer()
+                                            Image(systemName: "plus.circle.fill").foregroundStyle(Color("PrimaryColor"))
+                                        }
+                                        .padding(12)
+                                        .background(.thinMaterial)
+                                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color("Border"), lineWidth: 1))
+                                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
+            .padding()
         }
         .navigationTitle(Text(chain == nil ? "chaineditor_new_title" : "chaineditor_edit_title"))
         .toolbar {
             ToolbarItem(placement: .topBarLeading) { Button("common_cancel") { dismiss() } }
             ToolbarItem(placement: .topBarTrailing) { Button("common_save") { save() }.bold().disabled(name.trimmingCharacters(in: .whitespaces).isEmpty) }
-            ToolbarItem(placement: .automatic) { EditButton() }
         }
-        .scrollContentBackground(.hidden)
         .appBackground()
         .onAppear { if let chain { load(chain) } }
     }

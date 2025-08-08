@@ -16,19 +16,19 @@ struct ChainListView: View {
                 if chains.isEmpty {
                     VStack(spacing: 20) {
                         Spacer(minLength: 100)
-                        
+
                         ZStack {
                             Circle()
                                 .fill(LinearGradient.primary.opacity(0.15))
                                 .frame(width: 120, height: 120)
                                 .blur(radius: 20)
-                            
+
                             Image(systemName: "link.circle.fill")
                                 .font(.system(size: 60))
                                 .foregroundStyle(LinearGradient.primary)
                                 .symbolEffect(.pulse)
                         }
-                        
+
                         VStack(spacing: 8) {
                             Text("chains_empty_title")
                                 .font(.title2)
@@ -38,14 +38,14 @@ struct ChainListView: View {
                                 .foregroundStyle(.secondary)
                                 .multilineTextAlignment(.center)
                         }
-                        
+
                         Button("chains_add_first") {
                             editingChain = nil
                             showEditor = true
                         }
                         .buttonStyle(BouncyButtonStyle())
                         .padding(.top, 10)
-                        
+
                         Spacer(minLength: 100)
                     }
                     .frame(maxWidth: .infinity)
@@ -62,7 +62,7 @@ struct ChainListView: View {
                                     } label: {
                                         Label("Edit", systemImage: "pencil")
                                     }
-                                    
+
                                     Button(role: .destructive) {
                                         withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
                                             archive(chain)
@@ -77,7 +77,7 @@ struct ChainListView: View {
                         .offset(y: showContent ? 0 : 20)
                         .animation(
                             .spring(response: 0.8, dampingFraction: 0.8)
-                            .delay(Double(index) * 0.1),
+                                .delay(Double(index) * 0.1),
                             value: showContent
                         )
                     }
@@ -118,7 +118,7 @@ struct ChainListView: View {
 struct ChainCard: View {
     let chain: Chain
     @State private var isHovered = false
-    
+
     var body: some View {
         Card(style: .glass) {
             VStack(alignment: .leading, spacing: 12) {
@@ -126,14 +126,14 @@ struct ChainCard: View {
                     Text(chain.name)
                         .font(.headline)
                         .foregroundStyle(.primary)
-                    
+
                     Spacer()
-                    
+
                     Image(systemName: "chevron.right")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                
+
                 // Preview of chain items
                 HStack(spacing: 8) {
                     ForEach(chain.items.sorted(by: { $0.order < $1.order }).prefix(4), id: \.id) { item in
@@ -142,36 +142,36 @@ struct ChainCard: View {
                                 Circle()
                                     .fill(Color("PrimaryColor").opacity(0.1))
                                     .frame(width: 40, height: 40)
-                                
+
                                 Text(habit.emoji)
                                     .font(.title3)
                             }
                         }
                     }
-                    
+
                     if chain.items.count > 4 {
                         ZStack {
                             Circle()
                                 .fill(Color("SecondaryColor").opacity(0.1))
                                 .frame(width: 40, height: 40)
-                            
+
                             Text("+\(chain.items.count - 4)")
                                 .font(.caption)
                                 .fontWeight(.medium)
                                 .foregroundStyle(Color("SecondaryColor"))
                         }
                     }
-                    
+
                     Spacer()
                 }
                 HStack {
                     Label("\(chain.items.count) habits", systemImage: "link")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    
+
                     Spacer()
-                    
-                    let totalDuration = chain.items.compactMap({ $0.habit?.defaultDurationSeconds }).reduce(0, +)
+
+                    let totalDuration = chain.items.compactMap { $0.habit?.defaultDurationSeconds }.reduce(0, +)
                     if totalDuration > 0 {
                         Label("\(totalDuration / 60) min", systemImage: "timer")
                             .font(.caption)

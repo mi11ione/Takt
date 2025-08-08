@@ -54,10 +54,10 @@ struct HabitListHeaderView: View {
 
                     Spacer()
 
-                    Button("header_start") {
-                        onStart(habit)
+                    NavigationLink("Browse") {
+                        StarterTemplatesView()
                     }
-                    .buttonStyle(BouncyButtonStyle(gradient: LinearGradient.success))
+                    .buttonStyle(SecondaryButtonStyle())
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 16)

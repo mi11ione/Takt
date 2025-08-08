@@ -6,11 +6,11 @@ import SwiftUI
 struct PaywallView: View {
     @State private var selectedPlan: PricingPlan = .annual
     @State private var showContent = false
-    
+
     enum PricingPlan {
         case monthly, annual
     }
-    
+
     var body: some View {
         VStack(spacing: 20) {
             // Title section with sharp call-to-action symbol
@@ -42,7 +42,7 @@ struct PaywallView: View {
             }
             .opacity(showContent ? 1 : 0)
             .offset(y: showContent ? 0 : -20)
-            
+
             // Benefits
             VStack(spacing: 10) {
                 BenefitRow(
@@ -50,13 +50,13 @@ struct PaywallView: View {
                     title: "paywall_benefit_speed",
                     color: Color("Warning")
                 )
-                
+
                 BenefitRow(
                     icon: "flame.fill",
                     title: "paywall_benefit_streaks",
                     color: Color("SecondaryColor")
                 )
-                
+
                 BenefitRow(
                     icon: "chart.bar.fill",
                     title: "paywall_benefit_analytics",
@@ -65,7 +65,7 @@ struct PaywallView: View {
             }
             .opacity(showContent ? 1 : 0)
             .offset(y: showContent ? 0 : 20)
-            
+
             // Pricing cards
             VStack(spacing: 14) {
                 // Annual plan
@@ -81,7 +81,7 @@ struct PaywallView: View {
                         selectedPlan = .annual
                     }
                 }
-                
+
                 // Monthly plan
                 PricingCard(
                     isSelected: selectedPlan == .monthly,
@@ -112,23 +112,23 @@ struct BenefitRow: View {
     let icon: String
     let title: LocalizedStringKey
     let color: Color
-    
+
     var body: some View {
         HStack(spacing: 16) {
             ZStack {
                 Circle()
                     .fill(color.opacity(0.15))
                     .frame(width: 40, height: 40)
-                
+
                 Image(systemName: icon)
                     .font(.body)
                     .foregroundStyle(color)
             }
-            
+
             Text(title)
                 .font(.body)
                 .foregroundStyle(.primary)
-            
+
             Spacer()
         }
     }
@@ -142,7 +142,7 @@ struct PricingCard: View {
     let savings: String?
     let isRecommended: Bool
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             ZStack(alignment: .topTrailing) {
@@ -152,19 +152,19 @@ struct PricingCard: View {
                             Text(title)
                                 .font(.headline)
                                 .foregroundStyle(isSelected ? .white : .primary)
-                            
+
                             HStack(spacing: 4) {
                                 Text(price)
                                     .font(.title2)
                                     .fontWeight(.bold)
                                     .foregroundStyle(isSelected ? .white : .primary)
-                                
+
                                 Text(period)
                                     .font(.subheadline)
                                     .foregroundStyle(isSelected ? .white.opacity(0.8) : .secondary)
                             }
-                            
-                            if let savings = savings {
+
+                            if let savings {
                                 Text(savings)
                                     .font(.caption2)
                                     .fontWeight(.medium)
@@ -177,15 +177,15 @@ struct PricingCard: View {
                                     .foregroundStyle(isSelected ? .white : Color("Success"))
                             }
                         }
-                        
+
                         Spacer()
-                        
+
                         Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
                             .font(.title3)
                             .foregroundStyle(isSelected ? .white : Color("PrimaryColor"))
                     }
                 }
-                
+
                 if isRecommended {
                     Text("BEST VALUE")
                         .font(.caption2)

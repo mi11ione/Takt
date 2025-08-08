@@ -23,6 +23,7 @@ struct Card<Content: View>: View {
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .overlay(overlayView)
             .shadow(color: shadowColor, radius: shadowRadius, x: 0, y: shadowY)
+            .frame(maxWidth: .infinity)
     }
 
     @ViewBuilder

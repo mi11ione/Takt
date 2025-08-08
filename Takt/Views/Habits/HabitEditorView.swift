@@ -20,10 +20,11 @@ struct HabitEditorView: View {
         NavigationStack {
             ZStack {
                 AnimatedMeshBackground()
-                
+
                 ScrollView {
                     VStack(spacing: 24) {
                         emojiSelectorSection
+                            .padding(.top, 24)
                         formFieldsSection
                     }
                     .padding(.bottom, 40)
@@ -44,20 +45,20 @@ struct HabitEditorView: View {
             }
         }
     }
-    
+
     // MARK: - View Components
-    
+
     private var emojiSelectorSection: some View {
         VStack(spacing: 16) {
             emojiDisplay
-            
+
             if showEmojiPicker {
                 emojiPickerGrid
             }
         }
         .padding(.top, 40)
     }
-    
+
     private var emojiDisplay: some View {
         Text(emoji)
             .font(.system(size: 80))
@@ -72,7 +73,7 @@ struct HabitEditorView: View {
                 editIndicator
             }
     }
-    
+
     private var editIndicator: some View {
         Circle()
             .fill(LinearGradient.primary)
@@ -84,7 +85,7 @@ struct HabitEditorView: View {
             )
             .offset(x: 5, y: 5)
     }
-    
+
     private var emojiPickerGrid: some View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), spacing: 16) {
             ForEach(emojiOptions, id: \.self) { option in
@@ -101,7 +102,7 @@ struct HabitEditorView: View {
         .background(Card(style: .glass) { Color.clear })
         .transition(.scale.combined(with: .opacity))
     }
-    
+
     private func emojiOption(_ option: String) -> some View {
         Text(option)
             .font(.largeTitle)
@@ -112,7 +113,7 @@ struct HabitEditorView: View {
                     .fill(emoji == option ? LinearGradient.primary.opacity(0.2) : LinearGradient.primary.opacity(0.0))
             )
     }
-    
+
     private var formFieldsSection: some View {
         VStack(spacing: 20) {
             nameField
@@ -123,13 +124,13 @@ struct HabitEditorView: View {
         .opacity(showContent ? 1 : 0)
         .offset(y: showContent ? 0 : 20)
     }
-    
+
     private var nameField: some View {
         VStack(alignment: .leading, spacing: 8) {
             Label("habiteditor_basics", systemImage: "pencil.circle.fill")
                 .font(.headline)
                 .foregroundStyle(Color("PrimaryColor"))
-            
+
             Card(style: .glass) {
                 TextField("habiteditor_name_placeholder", text: $name)
                     .font(.title3)
@@ -137,13 +138,13 @@ struct HabitEditorView: View {
             }
         }
     }
-    
+
     private var durationSelector: some View {
         VStack(alignment: .leading, spacing: 8) {
             Label("Duration", systemImage: "timer")
                 .font(.headline)
                 .foregroundStyle(Color("PrimaryColor"))
-            
+
             Card(style: .glass) {
                 HStack(spacing: 12) {
                     Button {
@@ -158,7 +159,7 @@ struct HabitEditorView: View {
 
                     Spacer()
 
-                        Text("\(Int(duration))")
+                    Text("\(Int(duration))")
                         .font(.system(size: 42, weight: .bold, design: .rounded))
                         .monospacedDigit()
                         .contentTransition(.numericText())
@@ -178,25 +179,25 @@ struct HabitEditorView: View {
             }
         }
     }
-    
+
     private var durationText: some View { EmptyView() }
     private var durationControls: some View { EmptyView() }
-    
+
     private var favoriteToggle: some View {
         Card(style: .glass) {
             HStack {
                 Label("habiteditor_favorite", systemImage: isFavorite ? "star.fill" : "star")
                     .foregroundStyle(isFavorite ? Color("Warning") : .primary)
-                
+
                 Spacer()
-                
+
                 Toggle("", isOn: $isFavorite.animation(.spring(response: 0.3, dampingFraction: 0.7)))
                     .labelsHidden()
                     .tint(Color("Warning"))
             }
         }
     }
-    
+
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {

@@ -19,14 +19,14 @@ struct StartChainView: View {
     var body: some View {
         ZStack {
             AnimatedMeshBackground()
-            
+
             if isComplete {
                 // Completion view
                 VStack(spacing: 32) {
                     Spacer()
-                    
+
                     ZStack {
-                        ForEach(0..<3) { index in
+                        ForEach(0 ..< 3) { index in
                             Circle()
                                 .stroke(
                                     LinearGradient.success.opacity(0.3 - Double(index) * 0.1),
@@ -37,12 +37,12 @@ struct StartChainView: View {
                                 .opacity(showContent ? 0 : 1)
                                 .animation(
                                     .easeOut(duration: 1.5)
-                                    .repeatForever(autoreverses: false)
-                                    .delay(Double(index) * 0.2),
+                                        .repeatForever(autoreverses: false)
+                                        .delay(Double(index) * 0.2),
                                     value: showContent
                                 )
                         }
-                        
+
                         Image(systemName: "checkmark.seal.fill")
                             .font(.system(size: 80))
                             .foregroundStyle(
@@ -55,7 +55,7 @@ struct StartChainView: View {
                             .scaleEffect(showContent ? 1 : 0.5)
                             .rotationEffect(.degrees(showContent ? 0 : -180))
                     }
-                    
+
                     VStack(spacing: 16) {
                         Text("Chain Complete!")
                             .font(.largeTitle)
@@ -67,14 +67,14 @@ struct StartChainView: View {
                                     endPoint: .trailing
                                 )
                             )
-                        
+
                         Text("chain_complete_message")
                             .font(.title3)
                             .foregroundStyle(.secondary)
                     }
-                    
+
                     Spacer()
-                    
+
                     Button {
                         dismiss()
                     } label: {
@@ -90,7 +90,7 @@ struct StartChainView: View {
                     removal: .scale(scale: 1.1).combined(with: .opacity)
                 ))
                 .sensoryFeedback(.success, trigger: isComplete)
-                
+
             } else if let step = stepHabit {
                 // Active chain view
                 VStack(spacing: 32) {
@@ -100,9 +100,9 @@ struct StartChainView: View {
                         totalSteps: orderedHabits.count
                     )
                     .padding(.top, 20)
-                    
+
                     Spacer()
-                    
+
                     // Current habit
                     VStack(spacing: 24) {
                         ZStack {
@@ -110,7 +110,7 @@ struct StartChainView: View {
                                 .fill(LinearGradient.primary.opacity(0.15))
                                 .frame(width: 140, height: 140)
                                 .blur(radius: 30)
-                            
+
                             Text(step.emoji)
                                 .font(.system(size: 80))
                                 .scaleEffect(showContent ? 1 : 0.5)
@@ -120,7 +120,7 @@ struct StartChainView: View {
                             removal: .move(edge: .leading).combined(with: .opacity)
                         ))
                         .id(step.id)
-                        
+
                         VStack(spacing: 8) {
                             Text(step.name)
                                 .font(.title)
@@ -132,7 +132,7 @@ struct StartChainView: View {
                                         endPoint: .trailing
                                     )
                                 )
-                            
+
                             if step.defaultDurationSeconds > 0 {
                                 Label(
                                     "\(step.defaultDurationSeconds / 60) min",
@@ -143,9 +143,9 @@ struct StartChainView: View {
                             }
                         }
                     }
-                    
+
                     Spacer()
-                    
+
                     // Action buttons
                     HStack(spacing: 16) {
                         Button {
@@ -156,7 +156,7 @@ struct StartChainView: View {
                             Label("chain_skip", systemImage: "forward.fill")
                         }
                         .buttonStyle(SecondaryButtonStyle())
-                        
+
                         Button {
                             withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
                                 log(step)
@@ -172,7 +172,7 @@ struct StartChainView: View {
                 .padding(.horizontal)
                 .opacity(showContent ? 1 : 0)
                 .offset(y: showContent ? 0 : 20)
-                
+
             } else {
                 ContentUnavailableView("chains_unavailable", systemImage: "link.badge.plus")
                     .transition(.opacity)
@@ -213,10 +213,10 @@ struct StartChainView: View {
 struct ChainProgressView: View {
     let currentIndex: Int
     let totalSteps: Int
-    
+
     var body: some View {
         HStack(spacing: 8) {
-            ForEach(0..<totalSteps, id: \.self) { index in
+            ForEach(0 ..< totalSteps, id: \.self) { index in
                 circleFill(index: index)
                     .frame(width: 8, height: 8)
                     .scaleEffect(index == currentIndex ? 1.5 : 1)
@@ -225,7 +225,7 @@ struct ChainProgressView: View {
         }
         .padding(.horizontal)
     }
-    
+
     @ViewBuilder
     private func circleFill(index: Int) -> some View {
         if index <= currentIndex {

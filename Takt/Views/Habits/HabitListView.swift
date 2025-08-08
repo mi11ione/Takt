@@ -101,7 +101,7 @@ struct HabitListView: View {
                     }
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                 }
             }
         }
@@ -173,14 +173,9 @@ struct HabitListView: View {
                         Label("habits_show_archived", systemImage: "archivebox")
                     }
                 } label: {
-                    ZStack {
-                        Circle()
-                            .fill(Color("PrimaryColor").opacity(0.1))
-                            .frame(width: 36, height: 36)
-                        Image(systemName: "ellipsis")
-                            .fontWeight(.semibold)
-                            .foregroundStyle(Color("PrimaryColor"))
-                    }
+                    Image(systemName: "ellipsis")
+                        .fontWeight(.semibold)
+                        .foregroundStyle(Color("PrimaryColor"))
                 }
                 .accessibilityLabel(Text("habits_menu"))
             }
@@ -326,7 +321,7 @@ private struct HabitRow: View {
                 }
             }
         }
-        .padding(.horizontal, 4)
+        .padding(.horizontal, -14)
         .padding(.vertical, 6)
         .transition(.asymmetric(
             insertion: .move(edge: .trailing).combined(with: .opacity),

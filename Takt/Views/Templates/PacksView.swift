@@ -11,15 +11,38 @@ struct PacksView: View {
     ]
 
     var body: some View {
-        List(packs) { pack in
-            Section(header: Text(pack.title)) {
-                ForEach(pack.items, id: \.1) { item in
-                    HStack { Text(item.0); Text(item.1); Spacer(); Text("\(item.2)s").foregroundStyle(.secondary) }
+        ScrollView {
+            VStack(spacing: 16) {
+                ForEach(packs) { pack in
+                    Card(style: .glass) {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text(pack.title)
+                                .font(.headline)
+                            ForEach(pack.items, id: \.1) { item in
+                                HStack(spacing: 12) {
+                                    Text(item.0).font(.title3)
+                                    Text(item.1).font(.body)
+                                    Spacer()
+                                    Text("\(item.2 / 60)m")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .padding(10)
+                                .background(.thinMaterial)
+                                .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color("Border"), lineWidth: 1))
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                            }
+                            Button("packs_install") { install(pack) }
+                                .buttonStyle(BouncyButtonStyle())
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                        }
+                    }
                 }
-                Button("packs_install") { install(pack) }.buttonStyle(HapticButtonStyle())
             }
+            .padding()
         }
         .navigationTitle(Text("packs_title"))
+        .appBackground()
     }
 
     private func install(_ pack: Pack) {
