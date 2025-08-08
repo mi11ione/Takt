@@ -60,18 +60,7 @@ struct ArchivedHabitsView: View {
                         Text(habits.count == 1 ? "Archived Habit" : "Archived Habits")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
-                        HStack(spacing: 12) {
-                            Button(isSelecting ? "Done" : "Select") { withAnimation { isSelecting.toggle(); if !isSelecting { selectedIds.removeAll() } } }
-                                .buttonStyle(SecondaryButtonStyle(isCompact: true))
-                            if isSelecting {
-                                Button("Return") {
-                                    withAnimation { bulkUnarchive() }
-                                }
-                                .buttonStyle(BouncyButtonStyle())
-                                Button(role: .destructive) { withAnimation { bulkDelete() } } label: { Text("Delete") }
-                                    .buttonStyle(SecondaryButtonStyle())
-                            }
-                        }
+                        EmptyView()
                     }
                     .padding(.top, 20)
                     .opacity(showContent ? 1 : 0)
@@ -102,6 +91,23 @@ struct ArchivedHabitsView: View {
         .navigationTitle(Text("habits_archived_title"))
         .navigationBarTitleDisplayMode(.large)
         .background(AppBackground())
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                if isSelecting {
+                    Button("Return") { withAnimation { bulkUnarchive() } }
+                }
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                if isSelecting {
+                    Button(role: .destructive) { withAnimation { bulkDelete() } } label: { Text("Delete") }
+                }
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(isSelecting ? "Done" : "Select") {
+                    withAnimation { isSelecting.toggle(); if !isSelecting { selectedIds.removeAll() } }
+                }
+            }
+        }
         .onAppear {
             withAnimation(.spring(response: 0.8, dampingFraction: 0.8).delay(0.1)) {
                 showContent = true
@@ -172,12 +178,9 @@ struct ArchivedHabitRow: View {
                 Spacer()
 
                 if isSelecting {
-                    Button(action: onToggleSelect) {
-                        Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                            .font(.title3)
-                            .foregroundStyle(Color("PrimaryColor"))
-                    }
-                    .buttonStyle(PlainButtonStyle())
+                    Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                        .font(.title3)
+                        .foregroundStyle(Color("PrimaryColor"))
                 } else {
                     Button {
                         onUnarchive()
@@ -189,6 +192,8 @@ struct ArchivedHabitRow: View {
                 }
             }
         }
+        .contentShape(Rectangle())
+        .onTapGesture { if isSelecting { onToggleSelect() } }
         .scaleEffect(isHovered ? 1.02 : 1)
         .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isHovered)
         .onHover { hovering in

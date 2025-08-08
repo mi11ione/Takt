@@ -339,9 +339,11 @@ private struct SettingRow: View {
 
                 trailing
             }
-            .padding(.vertical, 8)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .buttonStyle(PlainButtonStyle())
+        .contentShape(Rectangle())
     }
 }
 

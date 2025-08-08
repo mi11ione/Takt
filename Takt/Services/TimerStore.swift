@@ -57,7 +57,13 @@ final class TimerStore {
         context.insert(entry)
         try? context.save()
         Task { await HabitActivityManager.shared.end() }
-        cancel()
+        // Reset inline state explicitly without ending another activity again
+        isRunning = false
+        tickingTask?.cancel()
+        tickingTask = nil
+        activeHabit = nil
+        totalSeconds = 0
+        remainingSeconds = 0
     }
 
     private func startTicking() {

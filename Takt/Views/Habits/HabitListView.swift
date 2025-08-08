@@ -3,7 +3,7 @@ import SwiftUI
 
 struct HabitListView: View {
     @Environment(\.modelContext) private var context
-    @Query(filter: #Predicate<Habit> { $0.archivedAt == nil }, sort: [SortDescriptor(\Habit.createdAt, order: .reverse)])
+    @Query(filter: #Predicate<Habit> { $0.archivedAt == nil }, sort: [SortDescriptor(\Habit.sortOrder, order: .forward)])
     private var habits: [Habit]
 
     @State private var showEditor: Bool = false
@@ -26,13 +26,6 @@ struct HabitListView: View {
 
     var body: some View {
         List {
-            Section {
-                if !recommendedMany.isEmpty {
-                    RecommendedStrip(habits: recommendedMany, onStart: { showTimer($0) }, onLog: { log(habit: $0) })
-                        .listRowBackground(Color.clear)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 8, trailing: 0))
-                }
-            }
             if habits.isEmpty {
                 Section {
                     VStack(spacing: 20) {
@@ -111,6 +104,7 @@ struct HabitListView: View {
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                 }
+                .onMove(perform: moveHabit)
             }
         }
         .scrollContentBackground(.hidden)
@@ -129,14 +123,14 @@ struct HabitListView: View {
             }
         }
         .overlay(alignment: .bottom) {
-            if let active = TimerStore.shared.activeHabit, TimerStore.shared.remainingSeconds > 0 {
-                InlineTimerWidget(habit: active)
+            if let active = TimerStore.shared.activeHabit, TimerStore.shared.remainingSeconds > 0, timerHabit == nil {
+                InlineTimerWidget(habit: active, onTap: { timerHabit = active })
                     .padding(.horizontal, 16)
                     .padding(.bottom, 12)
             }
         }
-        .sheet(isPresented: $showEditor) {
-            HabitEditorView(habit: editorHabit)
+        .sheet(item: Binding(get: { editorHabit }, set: { editorHabit = $0 })) { item in
+            HabitEditorView(habit: item)
         }
         .sheet(isPresented: $showTemplates) {
             NavigationStack { StarterTemplatesView() }
@@ -151,7 +145,7 @@ struct HabitListView: View {
             PaywallView()
         }
         .onAppear { ensureABBucket() }
-        .task(id: habits.count + tick) { computeRecommendation() }
+        .task(id: habits.count + tick) { /* recommendations removed */ }
         .task(id: TimerStore.shared.remainingSeconds) {
             // Nudge the view to refresh overlay progress roughly once a second
             tick = Int.random(in: 0 ... Int.max)
@@ -234,6 +228,13 @@ struct HabitListView: View {
         analytics.log(event: "habit_archived", ["habitId": habit.id.uuidString])
     }
 
+    private func moveHabit(from source: IndexSet, to destination: Int) {
+        var items = filteredHabits
+        items.move(fromOffsets: source, toOffset: destination)
+        for (index, h) in items.enumerated() { h.sortOrder = index }
+        try? context.save()
+    }
+
     private var filteredHabits: [Habit] {
         favoritesOnly ? habits.filter(\.isFavorite) : habits
     }
@@ -264,11 +265,6 @@ struct HabitListView: View {
         } else {
             MicroTimerView(habit: habit)
         }
-    }
-
-    private func computeRecommendation() {
-        recommended = RecommendationEngine().recommend(from: habits)?.habit
-        recommendedMany = RecommendationEngine().topRecommendations(from: habits, limit: 5)
     }
 
     private func firstChainAndIndex(for habit: Habit) -> (Chain, Int)? {
@@ -405,6 +401,7 @@ private struct HabitRow: View {
 // Inline timer widget shown at bottom of habit list when a timer is active
 private struct InlineTimerWidget: View {
     let habit: Habit
+    var onTap: () -> Void = {}
     @State private var animate = false
     @Environment(\.modelContext) private var context
 
@@ -449,6 +446,8 @@ private struct InlineTimerWidget: View {
                 }
             }
         }
+        .contentShape(Rectangle())
+        .onTapGesture { onTap() }
         .padding(.horizontal)
     }
 
