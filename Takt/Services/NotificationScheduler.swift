@@ -4,6 +4,7 @@ import UserNotifications
 public protocol NotificationScheduling: Sendable {
     func requestAuthorization() async -> Bool
     func scheduleDaypartSuggestions(enabled: Bool) async
+    func scheduleConfiguredDayparts(morning: Bool, midday: Bool, afternoon: Bool, evening: Bool, quietStartHour: Int, quietEndHour: Int) async
     func scheduleNudgeNow() async
     func cancelAll()
 }
@@ -36,6 +37,40 @@ public actor NotificationScheduler: NotificationScheduling {
             let content = UNMutableNotificationContent()
             content.title = NSLocalizedString("nudge_title", comment: "")
             content.body = item.body
+            content.sound = .default
+
+            var date = DateComponents()
+            date.hour = item.hour
+            date.minute = item.minute
+
+            let trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: true)
+            let request = UNNotificationRequest(identifier: item.id, content: content, trigger: trigger)
+            try? await center.add(request)
+        }
+    }
+
+    public func scheduleConfiguredDayparts(morning: Bool, midday: Bool, afternoon: Bool, evening: Bool, quietStartHour: Int, quietEndHour: Int) async {
+        let center = UNUserNotificationCenter.current()
+        let ids = ["takt.daypart.morning", "takt.daypart.midday", "takt.daypart.afternoon", "takt.daypart.evening"]
+        center.removePendingNotificationRequests(withIdentifiers: ids)
+
+        func withinQuietHours(_ hour: Int) -> Bool {
+            if quietStartHour <= quietEndHour { return hour >= quietStartHour && hour < quietEndHour }
+            // Quiet hours wrap midnight
+            return hour >= quietStartHour || hour < quietEndHour
+        }
+
+        let config: [(id: String, hour: Int, minute: Int, bodyKey: String, enabled: Bool)] = [
+            ("takt.daypart.morning", 9, 0, "nudge_morning", morning),
+            ("takt.daypart.midday", 12, 30, "nudge_midday", midday),
+            ("takt.daypart.afternoon", 16, 0, "nudge_afternoon", afternoon),
+            ("takt.daypart.evening", 20, 0, "nudge_evening", evening),
+        ]
+
+        for item in config where item.enabled && !withinQuietHours(item.hour) {
+            let content = UNMutableNotificationContent()
+            content.title = NSLocalizedString("nudge_title", comment: "")
+            content.body = NSLocalizedString(item.bodyKey, comment: "")
             content.sound = .default
 
             var date = DateComponents()

@@ -27,6 +27,11 @@ struct TaktApp: App {
             .environment(\.networkClient, NetworkClientImpl())
             .environment(\.subscriptionManager, StoreKitSubscriptionManager())
             .environment(\.analytics, DefaultAnalytics.shared)
+            .task {
+                UNUserNotificationCenter.current().delegate = NotificationHandler.shared
+                NotificationHandler.shared.container = modelContainer
+                NotificationHandler.shared.registerCategories()
+            }
         }
     }
 }

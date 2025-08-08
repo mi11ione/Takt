@@ -9,19 +9,21 @@ class HabitActivityManager {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
         if activity != nil { await end() }
         let attributes = HabitActivityAttributes(title: habitName)
-        let initialState = HabitActivityAttributes.ContentState(progress: 0)
-        activity = try? Activity.request(attributes: attributes, contentState: initialState, pushType: nil)
+        let content = ActivityContent(state: HabitActivityAttributes.ContentState(progress: 0), staleDate: nil)
+        activity = try? Activity.request(attributes: attributes, content: content, pushType: nil, style: .standard)
     }
 
     func updateProgress(_ progress: Double) async {
         guard let activity else { return }
-        let state = HabitActivityAttributes.ContentState(progress: max(0, min(1, progress)))
-        await activity.update(using: state)
+        let clamped = max(0, min(1, progress))
+        let content = ActivityContent(state: HabitActivityAttributes.ContentState(progress: clamped), staleDate: nil)
+        await activity.update(content, alertConfiguration: nil, timestamp: Date())
     }
 
     func end() async {
         guard let activity else { return }
-        await activity.end(dismissalPolicy: .immediate)
+        let finalContent = ActivityContent(state: HabitActivityAttributes.ContentState(progress: 1.0), staleDate: nil)
+        await activity.end(finalContent, dismissalPolicy: .immediate, timestamp: Date())
         self.activity = nil
     }
 }

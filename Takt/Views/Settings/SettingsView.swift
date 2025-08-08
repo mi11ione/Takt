@@ -6,6 +6,13 @@ struct SettingsView: View {
     @Environment(\.notificationScheduler) private var scheduler
     @AppStorage("iCloudSyncEnabled") private var iCloudSyncEnabled: Bool = true
     @AppStorage("notificationsEnabled") private var notificationsEnabled: Bool = true
+    // Nudges configuration
+    @AppStorage("nudgeMorning") private var nudgeMorning: Bool = true
+    @AppStorage("nudgeMidday") private var nudgeMidday: Bool = true
+    @AppStorage("nudgeAfternoon") private var nudgeAfternoon: Bool = true
+    @AppStorage("nudgeEvening") private var nudgeEvening: Bool = true
+    @AppStorage("quietStartHour") private var quietStartHour: Int = 22
+    @AppStorage("quietEndHour") private var quietEndHour: Int = 7
 
     private var appVersion: String {
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
@@ -27,12 +34,41 @@ struct SettingsView: View {
                         Task {
                             if newValue {
                                 _ = await scheduler.requestAuthorization()
-                                await scheduler.scheduleDaypartSuggestions(enabled: true)
+                                await scheduler.scheduleConfiguredDayparts(
+                                    morning: nudgeMorning,
+                                    midday: nudgeMidday,
+                                    afternoon: nudgeAfternoon,
+                                    evening: nudgeEvening,
+                                    quietStartHour: quietStartHour,
+                                    quietEndHour: quietEndHour
+                                )
                             } else {
-                                await scheduler.scheduleDaypartSuggestions(enabled: false)
+                                await scheduler.scheduleConfiguredDayparts(
+                                    morning: false, midday: false, afternoon: false, evening: false,
+                                    quietStartHour: quietStartHour, quietEndHour: quietEndHour
+                                )
                             }
                         }
                     }
+                if notificationsEnabled {
+                    Toggle("settings_nudge_morning", isOn: $nudgeMorning)
+                        .onChange(of: nudgeMorning) { _, _ in rescheduleNudges() }
+                    Toggle("settings_nudge_midday", isOn: $nudgeMidday)
+                        .onChange(of: nudgeMidday) { _, _ in rescheduleNudges() }
+                    Toggle("settings_nudge_afternoon", isOn: $nudgeAfternoon)
+                        .onChange(of: nudgeAfternoon) { _, _ in rescheduleNudges() }
+                    Toggle("settings_nudge_evening", isOn: $nudgeEvening)
+                        .onChange(of: nudgeEvening) { _, _ in rescheduleNudges() }
+                    HStack {
+                        Text("settings_quiet_hours")
+                        Spacer()
+                        Stepper(value: $quietStartHour, in: 0 ... 23) { Text(String(format: "%02d:00", quietStartHour)) }
+                        Text("—")
+                        Stepper(value: $quietEndHour, in: 0 ... 23) { Text(String(format: "%02d:00", quietEndHour)) }
+                    }
+                    Button("settings_send_test_nudge") { Task { await scheduler.scheduleNudgeNow() } }
+                        .buttonStyle(HapticButtonStyle())
+                }
             }
 
             Section(header: Text("settings_support_legal")) {
@@ -48,6 +84,19 @@ struct SettingsView: View {
             }
         }
         .navigationTitle(Text("settings_title"))
+    }
+
+    private func rescheduleNudges() {
+        Task {
+            await scheduler.scheduleConfiguredDayparts(
+                morning: nudgeMorning,
+                midday: nudgeMidday,
+                afternoon: nudgeAfternoon,
+                evening: nudgeEvening,
+                quietStartHour: quietStartHour,
+                quietEndHour: quietEndHour
+            )
+        }
     }
 }
 

@@ -50,6 +50,12 @@
 "settings_preferences" = "Preferences";
 "settings_icloud_sync" = "iCloud Sync";
 "settings_notifications" = "Notifications";
+"settings_nudge_morning" = "Morning nudge";
+"settings_nudge_midday" = "Midday nudge";
+"settings_nudge_afternoon" = "Afternoon nudge";
+"settings_nudge_evening" = "Evening nudge";
+"settings_quiet_hours" = "Quiet hours";
+"settings_send_test_nudge" = "Send test nudge";
 // Nudges
 "nudge_title" = "Quick nudge";
 "nudge_morning" = "Morning reset? 60s stretch feels great.";
@@ -57,6 +63,8 @@
 "nudge_afternoon" = "Afternoon focus reset?";
 "nudge_evening" = "Evening wind‑down: 60s stretch.";
 "nudge_now" = "Tiny action time — take a breath.";
+"nudge_action_log" = "Log now";
+"nudge_action_timer" = "Start timer";
 "settings_support_legal" = "Support & Legal";
 "settings_contact_support" = "Contact Support";
 "settings_privacy_policy" = "Privacy Policy";
