@@ -18,18 +18,16 @@ struct PaywallView: View {
                 Text("paywall_title")
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [Color("PrimaryColor"), Color("SecondaryColor")],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
+                    .foregroundStyle(LinearGradient(
+                        colors: [Color("PrimaryColor"), Color("SecondaryColor")],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    ))
                 
                 Text("paywall_subtitle")
                     .font(.title3)
                     .multilineTextAlignment(.center)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color("OnSurfaceSecondary"))
             }
             .opacity(showContent ? 1 : 0)
             .offset(y: showContent ? 0 : -20)
@@ -187,7 +185,7 @@ struct PricingCard: View {
                             Capsule()
                                 .fill(LinearGradient.warning)
                         )
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color("OnEmphasis"))
                         .offset(x: -10, y: -10)
                 }
             }

@@ -24,24 +24,24 @@ struct WeeklyInsightsView: View {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("insights_header")
                                     .font(.headline)
-                                    .foregroundStyle(.white.opacity(0.8))
+                                    .foregroundStyle(Color("OnEmphasis").opacity(0.88))
                                 
                                 summaryText()
                                     .font(.largeTitle)
                                     .fontWeight(.bold)
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(Color("OnEmphasis"))
                             }
                             
                             Spacer()
                             
                             ZStack {
                                 Circle()
-                                    .fill(.white.opacity(0.2))
+                                    .fill(Color("OnEmphasis").opacity(0.2))
                                     .frame(width: 80, height: 80)
                                 
                                 Image(systemName: "chart.line.uptrend.xyaxis")
                                     .font(.largeTitle)
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(Color("OnEmphasis"))
                                     .symbolEffect(.pulse)
                             }
                         }
@@ -49,9 +49,9 @@ struct WeeklyInsightsView: View {
                         if let hour = InsightsEngine().mostConsistentHour(entries: entries) {
                             HStack {
                                 Image(systemName: "clock.fill")
-                                    .foregroundStyle(.white.opacity(0.8))
+                                    .foregroundStyle(Color("OnEmphasis").opacity(0.88))
                                 Text(String(format: NSLocalizedString("insights_best_hour", comment: ""), hour))
-                                    .foregroundStyle(.white.opacity(0.8))
+                                    .foregroundStyle(Color("OnEmphasis").opacity(0.88))
                                 Spacer()
                             }
                             .font(.subheadline)

@@ -51,17 +51,7 @@ struct GlassEffect: ViewModifier {
             .background(LinearGradient.subtle.opacity(0.2))
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.3),
-                                Color.white.opacity(0.1),
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 1
-                    )
+                    .stroke(Color("Border"), lineWidth: 1)
             )
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
             .shadow(color: Color("PrimaryColor").opacity(0.06), radius: 6, x: 0, y: 2)
@@ -94,17 +84,7 @@ struct ModernCard<Content: View>: View {
             .background(gradient.opacity(0.14))
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.2),
-                                Color.white.opacity(0.05),
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 1
-                    )
+                    .stroke(Color("Border"), lineWidth: 1)
             )
             .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
             .shadow(color: Color("PrimaryColor").opacity(0.08), radius: 8, x: 0, y: 3)
@@ -136,7 +116,7 @@ struct FloatingActionButton: View {
                 Image(systemName: icon)
                     .font(.title2)
                     .fontWeight(.semibold)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("OnEmphasis"))
                     .rotationEffect(.degrees(isAnimating ? 90 : 0))
             }
         }
@@ -213,9 +193,9 @@ struct Shimmer: ViewModifier {
             .overlay(
                 LinearGradient(
                     colors: [
-                        Color.white.opacity(0),
-                        Color.white.opacity(0.3),
-                        Color.white.opacity(0),
+                        Color("OnEmphasis").opacity(0),
+                        Color("OnEmphasis").opacity(0.25),
+                        Color("OnEmphasis").opacity(0),
                     ],
                     startPoint: .leading,
                     endPoint: .trailing
@@ -248,7 +228,7 @@ struct BouncyButtonStyle: ButtonStyle {
             .padding(.horizontal, 24)
             .padding(.vertical, 14)
             .background(gradient)
-            .foregroundStyle(.white)
+            .foregroundStyle(Color("OnEmphasis"))
             .fontWeight(.semibold)
             .clipShape(Capsule())
             .shadow(color: Color("PrimaryColor").opacity(0.18), radius: configuration.isPressed ? 3 : 8, y: configuration.isPressed ? 1 : 4)
@@ -269,17 +249,7 @@ struct GlassButtonStyle: ButtonStyle {
             .background(LinearGradient.subtle.opacity(0.18))
             .overlay(
                 Capsule()
-                    .stroke(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.3),
-                                Color.white.opacity(0.1),
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 1
-                    )
+                    .stroke(Color("Border"), lineWidth: 1)
             )
             .clipShape(Capsule())
             .shadow(color: Color("PrimaryColor").opacity(0.07), radius: 6, y: 3)

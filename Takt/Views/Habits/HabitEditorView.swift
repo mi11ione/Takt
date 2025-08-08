@@ -80,7 +80,7 @@ struct HabitEditorView: View {
             .overlay(
                 Image(systemName: "pencil")
                     .font(.caption)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("OnEmphasis"))
             )
             .offset(x: 5, y: 5)
     }
@@ -145,47 +145,42 @@ struct HabitEditorView: View {
                 .foregroundStyle(Color("PrimaryColor"))
             
             Card(style: .glass) {
-                HStack {
-                    durationText
+                HStack(spacing: 12) {
+                    Button {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            if duration > 30 { duration -= 30 }
+                        }
+                    } label: {
+                        Image(systemName: "minus.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(Color("SecondaryColor"))
+                    }
+
                     Spacer()
-                    durationControls
+
+                    Text("\(Int(duration))")
+                        .font(.system(size: 42, weight: .bold, design: .rounded))
+                        .monospacedDigit()
+                        .contentTransition(.numericText())
+
+                    Spacer()
+
+                    Button {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            if duration < 180 { duration += 30 }
+                        }
+                    } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title2)
+                            .foregroundStyle(Color("PrimaryColor"))
+                    }
                 }
             }
         }
     }
     
-    private var durationText: some View {
-        Text(String(format: NSLocalizedString("habiteditor_duration_format", comment: ""), Int(duration)))
-            .foregroundStyle(.primary)
-    }
-    
-    private var durationControls: some View {
-        HStack(spacing: 12) {
-            Button {
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                    if duration > 30 { duration -= 30 }
-                }
-            } label: {
-                Image(systemName: "minus.circle.fill")
-                    .foregroundStyle(Color("SecondaryColor"))
-            }
-            
-            Text("\(Int(duration))")
-                .font(.headline)
-                .monospacedDigit()
-                .frame(width: 50)
-                .contentTransition(.numericText())
-            
-            Button {
-                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                    if duration < 180 { duration += 30 }
-                }
-            } label: {
-                Image(systemName: "plus.circle.fill")
-                    .foregroundStyle(Color("PrimaryColor"))
-            }
-        }
-    }
+    private var durationText: some View { EmptyView() }
+    private var durationControls: some View { EmptyView() }
     
     private var favoriteToggle: some View {
         Card(style: .glass) {

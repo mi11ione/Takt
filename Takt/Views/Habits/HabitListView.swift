@@ -196,7 +196,11 @@ struct HabitListView: View {
         maybeGateWithPaywall()
     }
 
-    private func showTimer(_ habit: Habit) { timerHabit = habit; showTimerSheet = true }
+    private func showTimer(_ habit: Habit) {
+        timerHabit = habit
+        // Defer toggling the sheet to the next runloop to avoid empty sheet when state updates in the same cycle
+        DispatchQueue.main.async { showTimerSheet = true }
+    }
 
     private func toggleFavorite(_ habit: Habit) {
         habit.isFavorite.toggle()

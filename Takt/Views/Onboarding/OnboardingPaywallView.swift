@@ -11,8 +11,7 @@ struct OnboardingPaywallView: View {
         ZStack {
             AnimatedMeshBackground()
 
-            ScrollView {
-                VStack(spacing: 32) {
+            VStack(spacing: 24) {
                     // Premium crown animation
                     ZStack {
                         Circle()
@@ -49,63 +48,27 @@ struct OnboardingPaywallView: View {
                             .repeatForever(autoreverses: true),
                         value: animateCrown
                     )
-                    .padding(.top, 40)
+                    .padding(.top, 24)
 
-                    VStack(spacing: 16) {
-                        Text("Unlock Premium")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundStyle(
-                                LinearGradient(
-                                    colors: [Color("PrimaryColor"), Color("SecondaryColor")],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-
-                        Text("Get unlimited habits and advanced features")
+                    VStack(spacing: 12) {
+                        Text("paywall_subtitle")
                             .font(.title3)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(Color("OnSurfaceSecondary"))
                             .multilineTextAlignment(.center)
                     }
                     .opacity(showContent ? 1 : 0)
                     .offset(y: showContent ? 0 : 20)
 
-                    // Feature cards
-                    VStack(spacing: 12) {
-                        FeatureCard(
-                            icon: "infinity",
-                            title: "Unlimited Habits",
-                            description: "Track as many habits as you want",
-                            color: Color("PrimaryColor")
-                        )
-
-                        FeatureCard(
-                            icon: "chart.line.uptrend.xyaxis",
-                            title: "Advanced Analytics",
-                            description: "Deep insights into your progress",
-                            color: Color("Success")
-                        )
-
-                        FeatureCard(
-                            icon: "bell.badge",
-                            title: "Smart Reminders",
-                            description: "AI-powered notification timing",
-                            color: Color("SecondaryColor")
-                        )
-                    }
-                    .padding(.horizontal)
-                    .opacity(showContent ? 1 : 0)
-                    .offset(y: showContent ? 0 : 30)
+                    // Keep this screen compact by relying on PaywallView's benefits
 
                     // Price options
                     PaywallView()
                         .background(Color.clear)
                         .opacity(showContent ? 1 : 0)
-                        .scaleEffect(showContent ? 1 : 0.9)
+                        .scaleEffect(showContent ? 1 : 0.95)
 
                     // Action buttons
-                    VStack(spacing: 16) {
+                    VStack(spacing: 12) {
                         Button("onb_paywall_subscribe") {
                             isProcessing = true
                             Task { defer { isProcessing = false }
@@ -119,7 +82,7 @@ struct OnboardingPaywallView: View {
                         .overlay(
                             isProcessing ?
                                 ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .progressViewStyle(CircularProgressViewStyle(tint: Color("OnEmphasis")))
                                 .scaleEffect(0.8)
                                 : nil
                         )
@@ -132,19 +95,25 @@ struct OnboardingPaywallView: View {
                         }
                         .buttonStyle(GlassButtonStyle())
 
+                        Button("onb_skip") {
+                            withAnimation(.spring(response: 0.5, dampingFraction: 0.8)) {
+                                hasOnboarded = true
+                            }
+                        }
+                        .font(.footnote)
+                        .foregroundStyle(Color("OnSurfaceSecondary"))
+
                         Button("onb_paywall_restore") {
                             Task { try? await subscriptions.restorePurchases() }
                         }
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                     }
-                    .padding(.horizontal, 32)
-                    .padding(.bottom, 50)
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 24)
                     .opacity(showContent ? 1 : 0)
                     .scaleEffect(showContent ? 1 : 0.8)
-                }
             }
-            .scrollIndicators(.hidden)
         }
         .ignoresSafeArea()
         .navigationBarTitleDisplayMode(.inline)

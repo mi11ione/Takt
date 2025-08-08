@@ -59,17 +59,7 @@ struct Card<Content: View>: View {
     private var overlayView: some View {
         if style == .glass || style == .elevated {
             RoundedRectangle(cornerRadius: 20)
-                .stroke(
-                    LinearGradient(
-                        colors: [
-                            Color.white.opacity(0.18),
-                            Color.white.opacity(0.06),
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: 1
-                )
+                .stroke(Color("Border"), lineWidth: 1)
         }
     }
 
@@ -80,7 +70,7 @@ struct Card<Content: View>: View {
         case .gradient:
             Color("PrimaryColor").opacity(0.12)
         case .flat:
-            Color.black.opacity(0.04)
+            Color("OnSurfacePrimary").opacity(0.05)
         }
     }
 

@@ -71,7 +71,7 @@ struct StarterTemplatesView: View {
                         VStack(alignment: .leading, spacing: 16) {
                             Text(category)
                                 .font(.headline)
-                                .foregroundStyle(Color("PrimaryColor"))
+                                .foregroundStyle(.secondary)
                                 .padding(.horizontal)
                             
                             ScrollView(.horizontal, showsIndicators: false) {
@@ -138,7 +138,7 @@ struct TemplateCard: View {
             VStack(spacing: 12) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(template.gradient.opacity(0.15))
+                        .fill(template.gradient.opacity(0.12))
                         .frame(width: 80, height: 80)
                     
                     Text(template.emoji)
@@ -178,19 +178,19 @@ struct TemplateCard: View {
                 .frame(height: 30)
             }
             .frame(width: 140, height: 200)
-            .padding()
+            .padding(12)
             .background(
                 RoundedRectangle(cornerRadius: 24)
-                    .fill(.regularMaterial)
+                    .fill(.thinMaterial)
                     .overlay(
                         RoundedRectangle(cornerRadius: 24)
                             .stroke(
-                                Color("Success").opacity(isAdded ? 0.5 : 0.0),
+                                Color("Success").opacity(isAdded ? 0.45 : 0.0),
                                 lineWidth: 2
                             )
                     )
             )
-            .shadow(color: Color.primary.opacity(0.2), radius: 6, y: 4)
+            .shadow(color: Color("PrimaryColor").opacity(0.07), radius: 6, y: 3)
         }
         .buttonStyle(PlainButtonStyle())
         .disabled(isAdded)

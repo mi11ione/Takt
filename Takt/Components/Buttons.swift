@@ -10,7 +10,7 @@ struct PrimaryButtonStyle: ButtonStyle {
             .padding(.horizontal, isCompact ? 14 : 20)
             .padding(.vertical, isCompact ? 9 : 12)
             .background(LinearGradient.primary)
-            .foregroundStyle(.white)
+            .foregroundStyle(Color("OnEmphasis"))
             .clipShape(Capsule())
             .shadow(color: Color("PrimaryColor").opacity(0.18), radius: configuration.isPressed ? 3 : 8, y: configuration.isPressed ? 1 : 4)
             .scaleEffect(configuration.isPressed ? 0.95 : 1)
@@ -32,17 +32,7 @@ struct SecondaryButtonStyle: ButtonStyle {
             .background(LinearGradient.subtle.opacity(0.18))
             .overlay(
                 Capsule()
-                    .stroke(
-                        LinearGradient(
-                            colors: [
-                                Color.white.opacity(0.3),
-                                Color.white.opacity(0.12),
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 1
-                    )
+                    .stroke(Color("Border"), lineWidth: 1)
             )
             .clipShape(Capsule())
             .shadow(color: Color("PrimaryColor").opacity(0.07), radius: 6, y: 3)
@@ -70,7 +60,7 @@ struct IconButtonStyle: ButtonStyle {
                         endPoint: .bottomTrailing
                     ))
             )
-            .foregroundStyle(.white)
+            .foregroundStyle(Color("OnEmphasis"))
             .shadow(color: backgroundColor.opacity(0.18), radius: configuration.isPressed ? 2 : 6, y: configuration.isPressed ? 1 : 3)
             .scaleEffect(configuration.isPressed ? 0.92 : 1)
             .animation(.spring(response: 0.3, dampingFraction: 0.6), value: configuration.isPressed)
