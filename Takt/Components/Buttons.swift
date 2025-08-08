@@ -1,24 +1,5 @@
 import SwiftUI
 
-struct PrimaryButtonStyle: ButtonStyle {
-    var isCompact: Bool = false
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(isCompact ? .subheadline : .body)
-            .fontWeight(.semibold)
-            .padding(.horizontal, isCompact ? 14 : 20)
-            .padding(.vertical, isCompact ? 9 : 12)
-            .background(LinearGradient.primary)
-            .foregroundStyle(Color("OnEmphasis"))
-            .clipShape(Capsule())
-            .shadow(color: Color("PrimaryColor").opacity(0.18), radius: configuration.isPressed ? 3 : 8, y: configuration.isPressed ? 1 : 4)
-            .scaleEffect(configuration.isPressed ? 0.95 : 1)
-            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: configuration.isPressed)
-            .sensoryFeedback(.impact(weight: .medium), trigger: configuration.isPressed)
-    }
-}
-
 struct SecondaryButtonStyle: ButtonStyle {
     var isCompact: Bool = false
 

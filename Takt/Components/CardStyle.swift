@@ -99,34 +99,3 @@ struct Card<Content: View>: View {
         }
     }
 }
-
-// Interactive Card
-struct InteractiveCard<Content: View>: View {
-    let content: Content
-    let action: () -> Void
-    @State private var isPressed = false
-
-    init(action: @escaping () -> Void, @ViewBuilder content: () -> Content) {
-        self.action = action
-        self.content = content()
-    }
-
-    var body: some View {
-        Button(action: action) {
-            Card(style: .elevated) {
-                content
-                    .foregroundStyle(.primary)
-            }
-        }
-        .buttonStyle(InteractiveCardButtonStyle())
-    }
-}
-
-struct InteractiveCardButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .scaleEffect(configuration.isPressed ? 0.97 : 1)
-            .animation(.spring(response: 0.3, dampingFraction: 0.7), value: configuration.isPressed)
-            .sensoryFeedback(.impact(weight: .light), trigger: configuration.isPressed)
-    }
-}

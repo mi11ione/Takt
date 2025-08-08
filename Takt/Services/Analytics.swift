@@ -33,5 +33,3 @@ final class MetricsObserver: NSObject, MXMetricManagerSubscriber {
     func didReceive(_: [MXMetricPayload]) {}
     func didReceive(_: [MXDiagnosticPayload]) {}
 }
-
-// No additional helpers needed at this time.
