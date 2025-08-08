@@ -23,129 +23,8 @@ struct HabitEditorView: View {
                 
                 ScrollView {
                     VStack(spacing: 24) {
-                        // Emoji selector
-                        VStack(spacing: 16) {
-                            Text(emoji)
-                                .font(.system(size: 80))
-                                .scaleEffect(showContent ? 1 : 0.5)
-                                .animation(.spring(response: 0.5, dampingFraction: 0.6), value: showContent)
-                                .onTapGesture {
-                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                        showEmojiPicker.toggle()
-                                    }
-                                }
-                                .overlay(alignment: .bottomTrailing) {
-                                    Circle()
-                                        .fill(LinearGradient.primary)
-                                        .frame(width: 30, height: 30)
-                                        .overlay(
-                                            Image(systemName: "pencil")
-                                                .font(.caption)
-                                                .foregroundStyle(.white)
-                                        )
-                                        .offset(x: 5, y: 5)
-                                }
-                            
-                            if showEmojiPicker {
-                                LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), spacing: 16) {
-                                    ForEach(emojiOptions, id: \.self) { option in
-                                        Text(option)
-                                            .font(.largeTitle)
-                                            .scaleEffect(emoji == option ? 1.2 : 1)
-                                            .padding(8)
-                                            .background(
-                                                Circle()
-                                                    .fill(emoji == option ? LinearGradient.primary.opacity(0.2) : Color.clear)
-                                            )
-                                            .onTapGesture {
-                                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                                    emoji = option
-                                                    showEmojiPicker = false
-                                                }
-                                            }
-                                    }
-                                }
-                                .padding()
-                                .background(Card(style: .glass) { Color.clear })
-                                .transition(.scale.combined(with: .opacity))
-                            }
-                        }
-                        .padding(.top, 40)
-                        
-                        // Form fields
-                        VStack(spacing: 20) {
-                            // Name field
-                            VStack(alignment: .leading, spacing: 8) {
-                                Label("habiteditor_basics", systemImage: "pencil.circle.fill")
-                                    .font(.headline)
-                                    .foregroundStyle(Color("PrimaryColor"))
-                                
-                                Card(style: .glass) {
-                                    TextField("habiteditor_name_placeholder", text: $name)
-                                        .font(.title3)
-                                        .padding(.vertical, 4)
-                                }
-                            }
-                            
-                            // Duration selector
-                            VStack(alignment: .leading, spacing: 8) {
-                                Label("Duration", systemImage: "timer")
-                                    .font(.headline)
-                                    .foregroundStyle(Color("PrimaryColor"))
-                                
-                                Card(style: .glass) {
-                                    HStack {
-                                        Text(String(format: NSLocalizedString("habiteditor_duration_format", comment: ""), Int(duration)))
-                                            .foregroundStyle(.primary)
-                                        
-                                        Spacer()
-                                        
-                                        HStack(spacing: 12) {
-                                            Button {
-                                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                                    if duration > 30 { duration -= 30 }
-                                                }
-                                            } label: {
-                                                Image(systemName: "minus.circle.fill")
-                                                    .foregroundStyle(Color("SecondaryColor"))
-                                            }
-                                            
-                                            Text("\(Int(duration))")
-                                                .font(.headline)
-                                                .monospacedDigit()
-                                                .frame(width: 50)
-                                                .contentTransition(.numericText())
-                                            
-                                            Button {
-                                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                                    if duration < 180 { duration += 30 }
-                                                }
-                                            } label: {
-                                                Image(systemName: "plus.circle.fill")
-                                                    .foregroundStyle(Color("PrimaryColor"))
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            // Favorite toggle
-                            Card(style: .glass) {
-                                HStack {
-                                    Label("habiteditor_favorite", systemImage: isFavorite ? "star.fill" : "star")
-                                        .foregroundStyle(isFavorite ? Color("Warning") : .primary)
-                                    
-                                    Spacer()
-                                    
-                                    Toggle("", isOn: $isFavorite.animation(.spring(response: 0.3, dampingFraction: 0.7)))
-                                        .labelsHidden()
-                                        .tint(Color("Warning"))
-                                }
-                            }
-                        }
-                        .padding(.horizontal)
-                        .opacity(showContent ? 1 : 0)
-                        .offset(y: showContent ? 0 : 20)
+                        emojiSelectorSection
+                        formFieldsSection
                     }
                     .padding(.bottom, 40)
                 }
@@ -155,16 +34,7 @@ struct HabitEditorView: View {
             .navigationTitle(Text(habit == nil ? "habiteditor_new_title" : "habiteditor_edit_title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("common_cancel") { dismiss() }
-                        .foregroundStyle(Color("SecondaryColor"))
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("common_save") { save() }
-                        .bold()
-                        .foregroundStyle(Color("PrimaryColor"))
-                        .disabled(name.isEmpty)
-                }
+                toolbarContent
             }
             .onAppear {
                 if let habit { load(habit) }
@@ -172,6 +42,177 @@ struct HabitEditorView: View {
                     showContent = true
                 }
             }
+        }
+    }
+    
+    // MARK: - View Components
+    
+    private var emojiSelectorSection: some View {
+        VStack(spacing: 16) {
+            emojiDisplay
+            
+            if showEmojiPicker {
+                emojiPickerGrid
+            }
+        }
+        .padding(.top, 40)
+    }
+    
+    private var emojiDisplay: some View {
+        Text(emoji)
+            .font(.system(size: 80))
+            .scaleEffect(showContent ? 1 : 0.5)
+            .animation(.spring(response: 0.5, dampingFraction: 0.6), value: showContent)
+            .onTapGesture {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                    showEmojiPicker.toggle()
+                }
+            }
+            .overlay(alignment: .bottomTrailing) {
+                editIndicator
+            }
+    }
+    
+    private var editIndicator: some View {
+        Circle()
+            .fill(LinearGradient.primary)
+            .frame(width: 30, height: 30)
+            .overlay(
+                Image(systemName: "pencil")
+                    .font(.caption)
+                    .foregroundStyle(.white)
+            )
+            .offset(x: 5, y: 5)
+    }
+    
+    private var emojiPickerGrid: some View {
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), spacing: 16) {
+            ForEach(emojiOptions, id: \.self) { option in
+                emojiOption(option)
+                    .onTapGesture {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            emoji = option
+                            showEmojiPicker = false
+                        }
+                    }
+            }
+        }
+        .padding()
+        .background(Card(style: .glass) { Color.clear })
+        .transition(.scale.combined(with: .opacity))
+    }
+    
+    private func emojiOption(_ option: String) -> some View {
+        Text(option)
+            .font(.largeTitle)
+            .scaleEffect(emoji == option ? 1.2 : 1)
+            .padding(8)
+            .background(
+                Circle()
+                    .fill(emoji == option ? LinearGradient.primary.opacity(0.2) : LinearGradient.primary.opacity(0.0))
+            )
+    }
+    
+    private var formFieldsSection: some View {
+        VStack(spacing: 20) {
+            nameField
+            durationSelector
+            favoriteToggle
+        }
+        .padding(.horizontal)
+        .opacity(showContent ? 1 : 0)
+        .offset(y: showContent ? 0 : 20)
+    }
+    
+    private var nameField: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("habiteditor_basics", systemImage: "pencil.circle.fill")
+                .font(.headline)
+                .foregroundStyle(Color("PrimaryColor"))
+            
+            Card(style: .glass) {
+                TextField("habiteditor_name_placeholder", text: $name)
+                    .font(.title3)
+                    .padding(.vertical, 4)
+            }
+        }
+    }
+    
+    private var durationSelector: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Duration", systemImage: "timer")
+                .font(.headline)
+                .foregroundStyle(Color("PrimaryColor"))
+            
+            Card(style: .glass) {
+                HStack {
+                    durationText
+                    Spacer()
+                    durationControls
+                }
+            }
+        }
+    }
+    
+    private var durationText: some View {
+        Text(String(format: NSLocalizedString("habiteditor_duration_format", comment: ""), Int(duration)))
+            .foregroundStyle(.primary)
+    }
+    
+    private var durationControls: some View {
+        HStack(spacing: 12) {
+            Button {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                    if duration > 30 { duration -= 30 }
+                }
+            } label: {
+                Image(systemName: "minus.circle.fill")
+                    .foregroundStyle(Color("SecondaryColor"))
+            }
+            
+            Text("\(Int(duration))")
+                .font(.headline)
+                .monospacedDigit()
+                .frame(width: 50)
+                .contentTransition(.numericText())
+            
+            Button {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                    if duration < 180 { duration += 30 }
+                }
+            } label: {
+                Image(systemName: "plus.circle.fill")
+                    .foregroundStyle(Color("PrimaryColor"))
+            }
+        }
+    }
+    
+    private var favoriteToggle: some View {
+        Card(style: .glass) {
+            HStack {
+                Label("habiteditor_favorite", systemImage: isFavorite ? "star.fill" : "star")
+                    .foregroundStyle(isFavorite ? Color("Warning") : .primary)
+                
+                Spacer()
+                
+                Toggle("", isOn: $isFavorite.animation(.spring(response: 0.3, dampingFraction: 0.7)))
+                    .labelsHidden()
+                    .tint(Color("Warning"))
+            }
+        }
+    }
+    
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading) {
+            Button("common_cancel") { dismiss() }
+                .foregroundStyle(Color("SecondaryColor"))
+        }
+        ToolbarItem(placement: .topBarTrailing) {
+            Button("common_save") { save() }
+                .bold()
+                .foregroundStyle(Color("PrimaryColor"))
+                .disabled(name.isEmpty)
         }
     }
 
