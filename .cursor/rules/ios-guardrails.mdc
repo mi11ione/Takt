@@ -11,4 +11,3 @@ alwaysApply: true
 - Target iOS 18.0+ and SwiftUI only (no UIKit unless explicitly requested).
 - No Combine, no GCD, no completion handlers; use Swift Concurrency (async/await, Task, TaskGroup, Actor).
 - Do not introduce ViewModels. Follow THE VIEW architecture rule.
-- Open a single PR per task with a concise summary and risks. Do not merge automatically.
