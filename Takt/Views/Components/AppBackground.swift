@@ -1,18 +1,92 @@
 import SwiftUI
 
 struct AppBackground: View {
+    @State private var animate = false
+
     var body: some View {
-        LinearGradient(
-            colors: [Color("Surface"), Color("Surface").opacity(0.95), Color.accentColor.opacity(0.08)],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
+        ZStack {
+            // Base gradient
+            LinearGradient(
+                colors: [
+                    Color("Surface"),
+                    Color("Surface").opacity(0.95),
+                    Color("PrimaryColor").opacity(0.05),
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+
+            // Animated gradient blobs
+            ForEach(0 ..< 3) { index in
+                Circle()
+                    .fill(
+                        RadialGradient(
+                            colors: [
+                                index == 0 ? Color("PrimaryColor").opacity(0.15) :
+                                    index == 1 ? Color("SecondaryColor").opacity(0.12) :
+                                    Color("GradientEnd").opacity(0.10),
+                                Color.clear,
+                            ],
+                            center: .center,
+                            startRadius: 0,
+                            endRadius: 200
+                        )
+                    )
+                    .frame(width: 400, height: 400)
+                    .blur(radius: 70)
+                    .offset(
+                        x: animate ?
+                            (index == 0 ? -100 : index == 1 ? 100 : 0) :
+                            (index == 0 ? 100 : index == 1 ? -100 : 50),
+                        y: animate ?
+                            (index == 0 ? -200 : index == 1 ? 200 : 0) :
+                            (index == 0 ? 200 : index == 1 ? -200 : -100)
+                    )
+                    .animation(
+                        .easeInOut(duration: Double.random(in: 10 ... 15))
+                            .repeatForever(autoreverses: true)
+                            .delay(Double(index) * 0.5),
+                        value: animate
+                    )
+            }
+
+            // Mesh gradient overlay
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        stops: [
+                            .init(color: Color("GradientStart").opacity(0.03), location: 0),
+                            .init(color: Color.clear, location: 0.3),
+                            .init(color: Color("GradientEnd").opacity(0.03), location: 0.7),
+                            .init(color: Color.clear, location: 1),
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .rotationEffect(.degrees(animate ? 5 : -5))
+                .animation(
+                    .easeInOut(duration: 20)
+                        .repeatForever(autoreverses: true),
+                    value: animate
+                )
+
+            // Subtle noise texture
+            Rectangle()
+                .fill(.ultraThinMaterial)
+                .opacity(0.05)
+        }
         .ignoresSafeArea()
+        .onAppear { animate = true }
     }
 }
 
 extension View {
-    func appBackground() -> some View { background(AppBackground()) }
+    func appBackground() -> some View {
+        background(AppBackground())
+    }
+
+    func animatedBackground() -> some View {
+        background(AnimatedMeshBackground())
+    }
 }
-
-

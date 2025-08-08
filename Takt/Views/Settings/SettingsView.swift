@@ -21,71 +21,244 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        Form {
-            Section(header: Text("settings_subscription")) {
-                Button("settings_manage_subscription") { Task { await subscriptions.manageSubscriptions() } }
-                Button("settings_restore_purchases") { Task { try? await subscriptions.restorePurchases() } }
-            }
+        ScrollView {
+            VStack(spacing: 20) {
+                // Subscription Section
+                VStack(alignment: .leading, spacing: 16) {
+                    Label {
+                        Text("settings_subscription")
+                            .font(.headline)
+                            .foregroundStyle(Color("PrimaryColor"))
+                    } icon: {
+                        Image(systemName: "crown.fill")
+                            .foregroundStyle(LinearGradient.primary)
+                    }
 
-            Section(header: Text("settings_preferences")) {
-                Toggle("settings_icloud_sync", isOn: $iCloudSyncEnabled)
-                Toggle("settings_notifications", isOn: $notificationsEnabled)
-                    .onChange(of: notificationsEnabled) { _, newValue in
-                        Task {
-                            if newValue {
-                                _ = await scheduler.requestAuthorization()
-                                await scheduler.scheduleConfiguredDayparts(
-                                    morning: nudgeMorning,
-                                    midday: nudgeMidday,
-                                    afternoon: nudgeAfternoon,
-                                    evening: nudgeEvening,
-                                    quietStartHour: quietStartHour,
-                                    quietEndHour: quietEndHour
-                                )
-                            } else {
-                                await scheduler.scheduleConfiguredDayparts(
-                                    morning: false, midday: false, afternoon: false, evening: false,
-                                    quietStartHour: quietStartHour, quietEndHour: quietEndHour
-                                )
+                    Card(style: .gradient) {
+                        VStack(spacing: 12) {
+                            Button {
+                                Task { await subscriptions.manageSubscriptions() }
+                            } label: {
+                                HStack {
+                                    Image(systemName: "creditcard.fill")
+                                    Text("settings_manage_subscription")
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .foregroundStyle(.primary)
+                            }
+
+                            Divider()
+
+                            Button {
+                                Task { try? await subscriptions.restorePurchases() }
+                            } label: {
+                                HStack {
+                                    Image(systemName: "arrow.clockwise")
+                                    Text("settings_restore_purchases")
+                                    Spacer()
+                                }
+                                .foregroundStyle(.primary)
                             }
                         }
                     }
-                if notificationsEnabled {
-                    Toggle("settings_nudge_morning", isOn: $nudgeMorning)
-                        .onChange(of: nudgeMorning) { _, _ in rescheduleNudges() }
-                    Toggle("settings_nudge_midday", isOn: $nudgeMidday)
-                        .onChange(of: nudgeMidday) { _, _ in rescheduleNudges() }
-                    Toggle("settings_nudge_afternoon", isOn: $nudgeAfternoon)
-                        .onChange(of: nudgeAfternoon) { _, _ in rescheduleNudges() }
-                    Toggle("settings_nudge_evening", isOn: $nudgeEvening)
-                        .onChange(of: nudgeEvening) { _, _ in rescheduleNudges() }
-                    HStack {
-                        Text("settings_quiet_hours")
-                        Spacer()
-                        Stepper(value: $quietStartHour, in: 0 ... 23) { Text(String(format: "%02d:00", quietStartHour)) }
-                        Text("—")
-                        Stepper(value: $quietEndHour, in: 0 ... 23) { Text(String(format: "%02d:00", quietEndHour)) }
+                }
+
+                // Preferences Section
+                VStack(alignment: .leading, spacing: 16) {
+                    Label {
+                        Text("settings_preferences")
+                            .font(.headline)
+                            .foregroundStyle(Color("PrimaryColor"))
+                    } icon: {
+                        Image(systemName: "gearshape.fill")
+                            .foregroundStyle(LinearGradient.primary)
                     }
-                    Button("settings_send_test_nudge") { Task { await scheduler.scheduleNudgeNow() } }
-                        .buttonStyle(HapticButtonStyle())
+
+                    Card(style: .glass) {
+                        VStack(spacing: 16) {
+                            SettingToggle(
+                                title: "settings_icloud_sync",
+                                icon: "icloud.fill",
+                                isOn: $iCloudSyncEnabled,
+                                color: Color("PrimaryColor")
+                            )
+
+                            Divider()
+
+                            SettingToggle(
+                                title: "settings_notifications",
+                                icon: "bell.fill",
+                                isOn: $notificationsEnabled,
+                                color: Color("SecondaryColor")
+                            )
+                            .onChange(of: notificationsEnabled) { _, newValue in
+                                Task {
+                                    if newValue {
+                                        _ = await scheduler.requestAuthorization()
+                                        await scheduler.scheduleConfiguredDayparts(
+                                            morning: nudgeMorning,
+                                            midday: nudgeMidday,
+                                            afternoon: nudgeAfternoon,
+                                            evening: nudgeEvening,
+                                            quietStartHour: quietStartHour,
+                                            quietEndHour: quietEndHour
+                                        )
+                                    } else {
+                                        await scheduler.scheduleConfiguredDayparts(
+                                            morning: false, midday: false, afternoon: false, evening: false,
+                                            quietStartHour: quietStartHour, quietEndHour: quietEndHour
+                                        )
+                                    }
+                                }
+                            }
+                            if notificationsEnabled {
+                                VStack(spacing: 12) {
+                                    Divider()
+
+                                    Text("Notification Schedule")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                                    NudgeToggle(title: "settings_nudge_morning", icon: "sunrise.fill", isOn: $nudgeMorning, color: Color("Warning"))
+                                        .onChange(of: nudgeMorning) { _, _ in rescheduleNudges() }
+
+                                    NudgeToggle(title: "settings_nudge_midday", icon: "sun.max.fill", isOn: $nudgeMidday, color: Color("PrimaryColor"))
+                                        .onChange(of: nudgeMidday) { _, _ in rescheduleNudges() }
+
+                                    NudgeToggle(title: "settings_nudge_afternoon", icon: "sun.haze.fill", isOn: $nudgeAfternoon, color: Color("SecondaryColor"))
+                                        .onChange(of: nudgeAfternoon) { _, _ in rescheduleNudges() }
+
+                                    NudgeToggle(title: "settings_nudge_evening", icon: "moon.fill", isOn: $nudgeEvening, color: Color("PrimaryColor"))
+                                        .onChange(of: nudgeEvening) { _, _ in rescheduleNudges() }
+                                    Divider()
+
+                                    HStack {
+                                        Label("settings_quiet_hours", systemImage: "moon.zzz.fill")
+                                            .font(.subheadline)
+                                        Spacer()
+                                        HStack(spacing: 8) {
+                                            Stepper(value: $quietStartHour, in: 0 ... 23) {
+                                                Text(String(format: "%02d:00", quietStartHour))
+                                                    .monospacedDigit()
+                                                    .foregroundStyle(Color("PrimaryColor"))
+                                            }
+                                            Text("—")
+                                                .foregroundStyle(.secondary)
+                                            Stepper(value: $quietEndHour, in: 0 ... 23) {
+                                                Text(String(format: "%02d:00", quietEndHour))
+                                                    .monospacedDigit()
+                                                    .foregroundStyle(Color("PrimaryColor"))
+                                            }
+                                        }
+                                    }
+
+                                    Button {
+                                        Task { await scheduler.scheduleNudgeNow() }
+                                    } label: {
+                                        Label("settings_send_test_nudge", systemImage: "bell.badge")
+                                            .frame(maxWidth: .infinity)
+                                    }
+                                    .buttonStyle(SecondaryButtonStyle())
+                                }
+                                .transition(.move(edge: .top).combined(with: .opacity))
+                            }
+                        }
+                    }
+                }
+
+                // Support & Legal Section
+                VStack(alignment: .leading, spacing: 16) {
+                    Label {
+                        Text("settings_support_legal")
+                            .font(.headline)
+                            .foregroundStyle(Color("PrimaryColor"))
+                    } icon: {
+                        Image(systemName: "questionmark.circle.fill")
+                            .foregroundStyle(LinearGradient.primary)
+                    }
+
+                    Card(style: .elevated) {
+                        VStack(spacing: 12) {
+                            Button {
+                                if let url = URL(string: "mailto:support@takt.app") { openURL(url) }
+                            } label: {
+                                HStack {
+                                    Image(systemName: "envelope.fill")
+                                        .foregroundStyle(Color("Success"))
+                                    Text("settings_contact_support")
+                                    Spacer()
+                                    Image(systemName: "arrow.up.right")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .foregroundStyle(.primary)
+                            }
+
+                            Divider()
+
+                            Link(destination: URL(string: "https://takt.app/privacy")!) {
+                                HStack {
+                                    Image(systemName: "hand.raised.fill")
+                                        .foregroundStyle(Color("PrimaryColor"))
+                                    Text("settings_privacy_policy")
+                                    Spacer()
+                                    Image(systemName: "arrow.up.right")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .foregroundStyle(.primary)
+                            }
+
+                            Divider()
+
+                            Link(destination: URL(string: "https://takt.app/terms")!) {
+                                HStack {
+                                    Image(systemName: "doc.text.fill")
+                                        .foregroundStyle(Color("SecondaryColor"))
+                                    Text("settings_terms")
+                                    Spacer()
+                                    Image(systemName: "arrow.up.right")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .foregroundStyle(.primary)
+                            }
+                        }
+                    }
+                }
+
+                // About Section
+                VStack(alignment: .leading, spacing: 16) {
+                    Label {
+                        Text("settings_about")
+                            .font(.headline)
+                            .foregroundStyle(Color("PrimaryColor"))
+                    } icon: {
+                        Image(systemName: "info.circle.fill")
+                            .foregroundStyle(LinearGradient.primary)
+                    }
+
+                    Card(style: .flat) {
+                        HStack {
+                            Label("settings_version", systemImage: "app.badge.fill")
+                            Spacer()
+                            Text(appVersion)
+                                .foregroundStyle(.secondary)
+                                .fontWeight(.medium)
+                        }
+                    }
                 }
             }
-
-            Section(header: Text("settings_support_legal")) {
-                Button("settings_contact_support") {
-                    if let url = URL(string: "mailto:support@takt.app") { openURL(url) }
-                }
-                Link("settings_privacy_policy", destination: URL(string: "https://takt.app/privacy")!)
-                Link("settings_terms", destination: URL(string: "https://takt.app/terms")!)
-            }
-
-            Section(header: Text("settings_about")) {
-                HStack { Text("settings_version"); Spacer(); Text(appVersion).foregroundStyle(.secondary) }
-            }
+            .padding()
         }
+        .scrollIndicators(.hidden)
         .navigationTitle(Text("settings_title"))
-        .scrollContentBackground(.hidden)
-        .appBackground()
+        .navigationBarTitleDisplayMode(.large)
+        .background(AppBackground())
     }
 
     private func rescheduleNudges() {
@@ -98,6 +271,62 @@ struct SettingsView: View {
                 quietStartHour: quietStartHour,
                 quietEndHour: quietEndHour
             )
+        }
+    }
+}
+
+// Setting Toggle Component
+struct SettingToggle: View {
+    let title: String
+    let icon: String
+    @Binding var isOn: Bool
+    let color: Color
+
+    var body: some View {
+        HStack {
+            Label {
+                Text(LocalizedStringKey(title))
+            } icon: {
+                Image(systemName: icon)
+                    .foregroundStyle(color)
+            }
+
+            Spacer()
+
+            Toggle("", isOn: $isOn)
+                .labelsHidden()
+                .tint(color)
+        }
+    }
+}
+
+// Nudge Toggle Component
+struct NudgeToggle: View {
+    let title: String
+    let icon: String
+    @Binding var isOn: Bool
+    let color: Color
+
+    var body: some View {
+        HStack {
+            ZStack {
+                Circle()
+                    .fill(color.opacity(0.15))
+                    .frame(width: 32, height: 32)
+                Image(systemName: icon)
+                    .font(.footnote)
+                    .foregroundStyle(color)
+            }
+
+            Text(LocalizedStringKey(title))
+                .font(.subheadline)
+
+            Spacer()
+
+            Toggle("", isOn: $isOn)
+                .labelsHidden()
+                .tint(color)
+                .scaleEffect(0.8)
         }
     }
 }

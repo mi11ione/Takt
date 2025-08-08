@@ -4,24 +4,197 @@ import SwiftUI
 /// - $4.99/month, $24.99/year (annual‑first), no trial. Annual ~35% discount.
 /// - Upgrade/downgrade within a single subscription group.
 struct PaywallView: View {
+    @State private var selectedPlan: PricingPlan = .annual
+    @State private var showContent = false
+    
+    enum PricingPlan {
+        case monthly, annual
+    }
+    
     var body: some View {
-        VStack(spacing: 16) {
-            Text("paywall_title").font(.largeTitle).bold()
-            Text("paywall_subtitle").multilineTextAlignment(.center).foregroundStyle(.secondary)
-
-            VStack(alignment: .leading, spacing: 8) {
-                Label("paywall_benefit_speed", systemImage: "bolt.fill")
-                Label("paywall_benefit_streaks", systemImage: "flame.fill")
-                Label("paywall_benefit_analytics", systemImage: "chart.bar.fill")
+        VStack(spacing: 24) {
+            // Title section
+            VStack(spacing: 12) {
+                Text("paywall_title")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [Color("PrimaryColor"), Color("SecondaryColor")],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                
+                Text("paywall_subtitle")
+                    .font(.title3)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(.secondary)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding()
-            .background(.quaternary, in: .rect(cornerRadius: 12))
-
-            Text("paywall_pricing_annual").font(.headline)
-            Text("paywall_pricing_monthly").font(.subheadline).foregroundStyle(.secondary)
+            .opacity(showContent ? 1 : 0)
+            .offset(y: showContent ? 0 : -20)
+            
+            // Benefits
+            VStack(spacing: 12) {
+                BenefitRow(
+                    icon: "bolt.fill",
+                    title: "paywall_benefit_speed",
+                    color: Color("Warning")
+                )
+                
+                BenefitRow(
+                    icon: "flame.fill",
+                    title: "paywall_benefit_streaks",
+                    color: Color("SecondaryColor")
+                )
+                
+                BenefitRow(
+                    icon: "chart.bar.fill",
+                    title: "paywall_benefit_analytics",
+                    color: Color("Success")
+                )
+            }
+            .opacity(showContent ? 1 : 0)
+            .offset(y: showContent ? 0 : 20)
+            
+            // Pricing cards
+            VStack(spacing: 16) {
+                // Annual plan
+                PricingCard(
+                    isSelected: selectedPlan == .annual,
+                    title: "Annual",
+                    price: "$24.99",
+                    period: "per year",
+                    savings: "Save 58%",
+                    isRecommended: true
+                ) {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        selectedPlan = .annual
+                    }
+                }
+                
+                // Monthly plan
+                PricingCard(
+                    isSelected: selectedPlan == .monthly,
+                    title: "Monthly",
+                    price: "$4.99",
+                    period: "per month",
+                    savings: nil,
+                    isRecommended: false
+                ) {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                        selectedPlan = .monthly
+                    }
+                }
+            }
+            .opacity(showContent ? 1 : 0)
+            .scaleEffect(showContent ? 1 : 0.95)
         }
         .padding()
+        .onAppear {
+            withAnimation(.spring(response: 0.8, dampingFraction: 0.8).delay(0.1)) {
+                showContent = true
+            }
+        }
+    }
+}
+
+struct BenefitRow: View {
+    let icon: String
+    let title: LocalizedStringKey
+    let color: Color
+    
+    var body: some View {
+        HStack(spacing: 16) {
+            ZStack {
+                Circle()
+                    .fill(color.opacity(0.15))
+                    .frame(width: 40, height: 40)
+                
+                Image(systemName: icon)
+                    .font(.body)
+                    .foregroundStyle(color)
+            }
+            
+            Text(title)
+                .font(.body)
+                .foregroundStyle(.primary)
+            
+            Spacer()
+        }
+    }
+}
+
+struct PricingCard: View {
+    let isSelected: Bool
+    let title: String
+    let price: String
+    let period: String
+    let savings: String?
+    let isRecommended: Bool
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            ZStack(alignment: .topTrailing) {
+                Card(style: isSelected ? .gradient : .glass) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(title)
+                                .font(.headline)
+                                .foregroundStyle(isSelected ? .white : .primary)
+                            
+                            HStack(spacing: 4) {
+                                Text(price)
+                                    .font(.title2)
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(isSelected ? .white : .primary)
+                                
+                                Text(period)
+                                    .font(.subheadline)
+                                    .foregroundStyle(isSelected ? .white.opacity(0.8) : .secondary)
+                            }
+                            
+                            if let savings = savings {
+                                Text(savings)
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(
+                                        Capsule()
+                                            .fill(isSelected ? .white.opacity(0.2) : Color("Success").opacity(0.15))
+                                    )
+                                    .foregroundStyle(isSelected ? .white : Color("Success"))
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                        Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                            .font(.title2)
+                            .foregroundStyle(isSelected ? .white : Color("PrimaryColor"))
+                    }
+                }
+                
+                if isRecommended {
+                    Text("BEST VALUE")
+                        .font(.caption2)
+                        .fontWeight(.bold)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(
+                            Capsule()
+                                .fill(LinearGradient.warning)
+                        )
+                        .foregroundStyle(.white)
+                        .offset(x: -10, y: -10)
+                }
+            }
+        }
+        .buttonStyle(PlainButtonStyle())
+        .scaleEffect(isSelected ? 1.02 : 1)
+        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isSelected)
     }
 }
 

@@ -28,41 +28,97 @@ struct ContentView: View {
     private var habits: [Habit]
 
     var body: some View {
-        Group {
+        ZStack {
             switch state {
             case .idle, .loading:
-                ContentUnavailableView(
-                    "takt_loading_title",
-                    systemImage: "hourglass",
-                    description: Text("takt_loading_desc")
-                )
+                VStack(spacing: 20) {
+                    ZStack {
+                        Circle()
+                            .fill(LinearGradient.primary.opacity(0.15))
+                            .frame(width: 100, height: 100)
+                            .blur(radius: 20)
+
+                        Image(systemName: "hourglass")
+                            .font(.system(size: 50))
+                            .foregroundStyle(LinearGradient.primary)
+                            .symbolEffect(.variableColor.iterative.reversing)
+                    }
+
+                    VStack(spacing: 8) {
+                        Text("takt_loading_title")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        Text("takt_loading_desc")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .transition(.scale(scale: 0.9).combined(with: .opacity))
+
             case .loaded:
                 listView
+                    .transition(.asymmetric(
+                        insertion: .move(edge: .bottom).combined(with: .opacity),
+                        removal: .scale(scale: 1.1).combined(with: .opacity)
+                    ))
+
             case .error:
-                ContentUnavailableView(
-                    "takt_error_title",
-                    systemImage: "exclamationmark.triangle",
-                    description: Text("takt_error_desc")
-                )
+                VStack(spacing: 20) {
+                    ZStack {
+                        Circle()
+                            .fill(Color("Warning").opacity(0.15))
+                            .frame(width: 100, height: 100)
+                            .blur(radius: 20)
+
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .font(.system(size: 50))
+                            .foregroundStyle(Color("Warning"))
+                            .symbolEffect(.bounce)
+                    }
+
+                    VStack(spacing: 8) {
+                        Text("takt_error_title")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        Text("takt_error_desc")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .transition(.scale(scale: 0.9).combined(with: .opacity))
             }
         }
-        .transition(.opacity.combined(with: .scale))
-        .animation(.snappy, value: state)
+        .animation(.spring(response: 0.6, dampingFraction: 0.8), value: state)
         .navigationTitle(Text("takt_title"))
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
                     showPaywall = true
                 } label: {
-                    Label("takt_paywall", systemImage: "crown")
+                    ZStack {
+                        Circle()
+                            .fill(LinearGradient.primary.opacity(0.15))
+                            .frame(width: 36, height: 36)
+                        Image(systemName: "crown.fill")
+                            .font(.subheadline)
+                            .foregroundStyle(LinearGradient.primary)
+                            .symbolEffect(.pulse)
+                    }
                 }
-                .buttonStyle(HapticButtonStyle())
+                .sensoryFeedback(.impact(weight: .light), trigger: showPaywall)
             }
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink {
                     SettingsView()
                 } label: {
-                    Image(systemName: "gearshape")
+                    ZStack {
+                        Circle()
+                            .fill(Color("PrimaryColor").opacity(0.1))
+                            .frame(width: 36, height: 36)
+                        Image(systemName: "gearshape.fill")
+                            .font(.subheadline)
+                            .foregroundStyle(Color("PrimaryColor"))
+                    }
                 }
                 .accessibilityLabel(Text("takt_settings"))
             }
