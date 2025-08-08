@@ -38,6 +38,7 @@ public actor NotificationScheduler: NotificationScheduling {
             content.title = NSLocalizedString("nudge_title", comment: "")
             content.body = item.body
             content.sound = .default
+            content.categoryIdentifier = "TAKT_DAYPART"
 
             var date = DateComponents()
             date.hour = item.hour
@@ -89,6 +90,7 @@ public actor NotificationScheduler: NotificationScheduling {
         content.title = NSLocalizedString("nudge_title", comment: "")
         content.body = NSLocalizedString("nudge_now", comment: "")
         content.sound = .default
+        content.categoryIdentifier = "TAKT_DAYPART"
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         try? await center.add(request)

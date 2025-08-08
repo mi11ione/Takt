@@ -4,6 +4,7 @@ import SwiftUI
 struct StartChainView: View {
     @Environment(\.modelContext) private var context
     let chain: Chain
+    let startAt: Int?
 
     @State private var currentIndex: Int = 0
     @State private var isComplete: Bool = false
@@ -26,6 +27,9 @@ struct StartChainView: View {
         }
         .padding()
         .navigationTitle(Text("start_chain_title"))
+        .onAppear {
+            if let startAt, startAt >= 0 { currentIndex = startAt }
+        }
     }
 
     private var orderedHabits: [Habit] {
@@ -51,4 +55,4 @@ private extension Collection {
     subscript(safe index: Index) -> Element? { indices.contains(index) ? self[index] : nil }
 }
 
-#Preview { StartChainView(chain: Chain(name: "Focus Reset")) }
+#Preview { StartChainView(chain: Chain(name: "Focus Reset"), startAt: 0) }

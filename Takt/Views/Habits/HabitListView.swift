@@ -150,19 +150,32 @@ struct HabitListView: View {
     }
 
     private func belongsToAnyChain(_ habit: Habit) -> Bool {
-        // Lightweight check using modelContext fetch via @Query alternative is omitted for simplicity
-        // This placeholder returns true if habit is favorited to demo the affordance; replace with real relation later if needed.
-        habit.isFavorite
+        // Check if any ChainItem references this habit (filter in-memory to avoid predicate optional issues)
+        let descriptor = FetchDescriptor<ChainItem>()
+        let items = (try? context.fetch(descriptor)) ?? []
+        return items.contains { $0.habit?.id == habit.id }
     }
 
     @ViewBuilder
     private func quickStartView(for habit: Habit) -> some View {
-        // Start any chain containing this habit; fallback to timer if none
-        MicroTimerView(habit: habit)
+        if let (chain, index) = firstChainAndIndex(for: habit) {
+            StartChainView(chain: chain, startAt: index)
+        } else {
+            MicroTimerView(habit: habit)
+        }
     }
 
     private func computeRecommendation() {
         recommended = RecommendationEngine().recommend(from: habits)?.habit
+    }
+
+    private func firstChainAndIndex(for habit: Habit) -> (Chain, Int)? {
+        let chainDesc = FetchDescriptor<ChainItem>()
+        let items = (try? context.fetch(chainDesc)) ?? []
+        guard let item = items.first(where: { $0.habit?.id == habit.id }), let chain = item.chain else { return nil }
+        let ordered = chain.items.sorted { $0.order < $1.order }
+        if let idx = ordered.firstIndex(where: { $0.habit?.id == habit.id }) { return (chain, idx) }
+        return nil
     }
 }
 

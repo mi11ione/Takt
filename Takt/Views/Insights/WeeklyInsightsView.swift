@@ -13,6 +13,9 @@ struct WeeklyInsightsView: View {
                     Text(String(format: NSLocalizedString("insights_best_hour", comment: ""), hour))
                         .foregroundStyle(.secondary)
                 }
+                NavigationLink(destination: PacksView()) {
+                    Label("packs_title", systemImage: "sparkles")
+                }
             }
             Section(header: Text("insights_highlights")) {
                 ForEach(habits, id: \.id) { habit in

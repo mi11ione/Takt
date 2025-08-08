@@ -31,6 +31,8 @@ struct TaktApp: App {
                 UNUserNotificationCenter.current().delegate = NotificationHandler.shared
                 NotificationHandler.shared.container = modelContainer
                 NotificationHandler.shared.registerCategories()
+                DeepLinkRouter.shared.modelContainer = modelContainer
+                await DeepLinkRouter.shared.consumePendingAction()
             }
         }
     }
