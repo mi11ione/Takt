@@ -158,7 +158,7 @@ struct HabitEditorView: View {
 
                     Spacer()
 
-                    Text("\(Int(duration))")
+                        Text("\(Int(duration))")
                         .font(.system(size: 42, weight: .bold, design: .rounded))
                         .monospacedDigit()
                         .contentTransition(.numericText())
@@ -167,7 +167,7 @@ struct HabitEditorView: View {
 
                     Button {
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                            if duration < 180 { duration += 30 }
+                            if duration < 3600 { duration += 30 }
                         }
                     } label: {
                         Image(systemName: "plus.circle.fill")

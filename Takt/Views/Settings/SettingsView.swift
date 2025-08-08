@@ -34,34 +34,26 @@ struct SettingsView: View {
                             .foregroundStyle(LinearGradient.primary)
                     }
 
-                    Card(style: .gradient) {
-                        VStack(spacing: 12) {
-                            Button {
+                    Card(style: .glass) {
+                        VStack(spacing: 10) {
+                            SettingRow(
+                                icon: "creditcard.fill",
+                                title: "settings_manage_subscription",
+                                trailing: AnyView(Image(systemName: "chevron.right").font(.caption).foregroundStyle(Color("OnSurfaceSecondary")))
+                            ) {
                                 Task { await subscriptions.manageSubscriptions() }
-                            } label: {
-                                HStack {
-                                    Image(systemName: "creditcard.fill")
-                                    Text("settings_manage_subscription")
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                }
-                                .foregroundStyle(.primary)
                             }
 
                             Divider()
 
-                            Button {
+                            SettingRow(
+                                icon: "arrow.clockwise",
+                                title: "settings_restore_purchases",
+                                trailing: AnyView(EmptyView())
+                            ) {
                                 Task { try? await subscriptions.restorePurchases() }
-                            } label: {
-                                HStack {
-                                    Image(systemName: "arrow.clockwise")
-                                    Text("settings_restore_purchases")
-                                    Spacer()
-                                }
-                                .foregroundStyle(.primary)
                             }
+                            .padding(.leading, 3)
                         }
                     }
                 }
@@ -78,7 +70,7 @@ struct SettingsView: View {
                     }
 
                     Card(style: .glass) {
-                        VStack(spacing: 16) {
+                        VStack(spacing: 12) {
                             SettingToggle(
                                 title: "settings_icloud_sync",
                                 icon: "icloud.fill",
@@ -136,23 +128,18 @@ struct SettingsView: View {
                                         .onChange(of: nudgeEvening) { _, _ in rescheduleNudges() }
                                     Divider()
 
-                                    HStack {
-                                        Label("settings_quiet_hours", systemImage: "moon.zzz.fill")
-                                            .font(.subheadline)
-                                        Spacer()
-                                        HStack(spacing: 8) {
-                                            Stepper(value: $quietStartHour, in: 0 ... 23) {
-                                                Text(String(format: "%02d:00", quietStartHour))
-                                                    .monospacedDigit()
-                                                    .foregroundStyle(Color("PrimaryColor"))
-                                            }
-                                            Text("—")
-                                                .foregroundStyle(.secondary)
-                                            Stepper(value: $quietEndHour, in: 0 ... 23) {
-                                                Text(String(format: "%02d:00", quietEndHour))
-                                                    .monospacedDigit()
-                                                    .foregroundStyle(Color("PrimaryColor"))
-                                            }
+                                    // Quiet hours redesigned (more usable): two aligned bordered chips with +/-
+                                    VStack(spacing: 8) {
+                                        HStack {
+                                            Label("settings_quiet_hours", systemImage: "moon.zzz.fill")
+                                                .font(.subheadline)
+                                            Spacer()
+                                        }
+
+                                        HStack(spacing: 12) {
+                                            TimeChip(title: "Start", value: $quietStartHour)
+                                            Text("—").foregroundStyle(Color("OnSurfaceSecondary"))
+                                            TimeChip(title: "End", value: $quietEndHour)
                                         }
                                     }
 
@@ -329,6 +316,70 @@ struct NudgeToggle: View {
                 .scaleEffect(0.8)
         }
     }
+}
+
+// Generic Settings Row (icon + title + trailing content) with consistent padding/colors
+private struct SettingRow: View {
+    let icon: String
+    let title: String
+    let trailing: AnyView
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 12) {
+                Image(systemName: icon)
+                    .foregroundStyle(LinearGradient.primary)
+
+                Text(LocalizedStringKey(title))
+                    .font(.body)
+                    .foregroundStyle(Color("OnSurfacePrimary"))
+
+                Spacer()
+
+                trailing
+            }
+            .padding(.vertical, 8)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+// Quiet hours chips with thin borders and +/- controls
+private struct TimeChip: View {
+    let title: String
+    @Binding var value: Int
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(Color("OnSurfaceSecondary"))
+            Button { decrement() } label: {
+                Image(systemName: "minus")
+                    .font(.caption2)
+            }
+            .buttonStyle(SecondaryButtonStyle(isCompact: true))
+
+            Text(String(format: "%02d:00", value))
+                .font(.subheadline).monospacedDigit()
+                .foregroundStyle(Color("OnSurfacePrimary"))
+
+            Button { increment() } label: {
+                Image(systemName: "plus")
+                    .font(.caption2)
+            }
+            .buttonStyle(SecondaryButtonStyle(isCompact: true))
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(.thinMaterial)
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color("Border"), lineWidth: 1))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
+    private func decrement() { value = max(0, value - 1) }
+    private func increment() { value = min(23, value + 1) }
 }
 
 #Preview { NavigationStack { SettingsView() } }

@@ -184,10 +184,11 @@ struct TemplateCard: View {
                     .fill(.thinMaterial)
                     .overlay(
                         RoundedRectangle(cornerRadius: 24)
-                            .stroke(
-                                Color("Success").opacity(isAdded ? 0.45 : 0.0),
-                                lineWidth: 2
-                            )
+                            .stroke(Color("Border"), lineWidth: 1)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 24)
+                            .stroke(Color("Success").opacity(isAdded ? 0.45 : 0.0), lineWidth: 2)
                     )
             )
             .shadow(color: Color("PrimaryColor").opacity(0.07), radius: 6, y: 3)

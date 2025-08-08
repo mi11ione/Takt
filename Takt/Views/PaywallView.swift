@@ -13,8 +13,19 @@ struct PaywallView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            // Title section
+            // Title section with sharp call-to-action symbol
             VStack(spacing: 10) {
+                ZStack {
+                    Circle()
+                        .fill(LinearGradient.primary.opacity(0.15))
+                        .frame(width: 68, height: 68)
+                    Image(systemName: "sparkles.rectangle.stack.fill")
+                        .font(.system(size: 28, weight: .semibold))
+                        .foregroundStyle(LinearGradient.primary)
+                        .symbolEffect(.bounce.down, value: showContent)
+                        .shadow(color: Color("PrimaryColor").opacity(0.2), radius: 6, y: 3)
+                }
+
                 Text("paywall_title")
                     .font(.largeTitle)
                     .fontWeight(.bold)
@@ -23,7 +34,7 @@ struct PaywallView: View {
                         startPoint: .leading,
                         endPoint: .trailing
                     ))
-                
+
                 Text("paywall_subtitle")
                     .font(.title3)
                     .multilineTextAlignment(.center)
