@@ -77,35 +77,8 @@ struct ContentView: View {
     }
 
     private var listView: some View {
-        Group {
-            if habits.isEmpty {
-                ContentUnavailableView {
-                    Label("takt_empty_title", systemImage: "sparkles")
-                } description: {
-                    Text("takt_empty_desc")
-                } actions: {
-                    NavigationLink("takt_go_to_library", destination: SettingsView())
-                        .buttonStyle(HapticButtonStyle())
-                }
-            } else {
-                List(habits, id: \.id) { habit in
-                    HStack(spacing: 12) {
-                        Text(habit.emoji)
-                        VStack(alignment: .leading) {
-                            Text(habit.name)
-                                .font(.headline)
-                            Text(habit.createdAt, style: .date)
-                                .font(.footnote)
-                                .foregroundStyle(.secondary)
-                        }
-                        Spacer()
-                        Image(systemName: habit.isFavorite ? "star.fill" : "star")
-                            .foregroundStyle(habit.isFavorite ? .yellow : .secondary)
-                    }
-                    .accessibilityElement(children: .combine)
-                }
-                .listStyle(.insetGrouped)
-            }
+        NavigationStack {
+            HabitListView()
         }
     }
 

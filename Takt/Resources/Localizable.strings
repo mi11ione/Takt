@@ -14,6 +14,10 @@
 "takt_empty_desc" = "Start with a tiny action — 30–90 seconds.";
 "takt_go_to_library" = "Browse";
 
+// Common
+"common_cancel" = "Cancel";
+"common_save" = "Save";
+
 // Onboarding
 "onb_intro_title" = "Micro‑habits that actually stick";
 "onb_intro_subtitle" = "Ultra‑fast actions on Lock Screen, Widgets, and Watch.";
@@ -52,6 +56,47 @@
 "settings_terms" = "Terms of Use";
 "settings_about" = "About";
 "settings_version" = "Version";
+
+// Habits
+"habits_title" = "Habits";
+"habits_add" = "Add";
+"habits_add_first" = "Add your first habit";
+"habits_edit" = "Edit";
+"habits_favorite" = "Favorite";
+"habits_unfavorite" = "Unfavorite";
+"habits_show_templates" = "Browse Templates";
+"habits_show_archived" = "View Archived";
+"habits_archived_title" = "Archived Habits";
+"habits_unarchive" = "Unarchive";
+"habits_favorites_only" = "Favorites only";
+"habits_menu" = "More";
+"habits_favorite_star_accessibility" = "Favorite indicator";
+"habits_streak_none" = "No streak yet";
+"habits_streak_one" = "1‑day streak";
+"habits_streak_multi" = "%d‑day streak";
+
+// Habit Editor
+"habiteditor_new_title" = "New Habit";
+"habiteditor_edit_title" = "Edit Habit";
+"habiteditor_basics" = "Basics";
+"habiteditor_name_placeholder" = "Name (short and snappy)";
+"habiteditor_emoji_placeholder" = "Emoji";
+"habiteditor_duration_format" = "%d seconds";
+"habiteditor_favorite" = "Add to favorites";
+
+// Insights
+"insights_title" = "Weekly Insights";
+"insights_header" = "This Week";
+"insights_weekly_zero" = "You haven’t logged any micro‑habits yet this week.";
+"insights_weekly_one" = "1 micro‑habit logged this week. Nice start.";
+"insights_weekly_multi" = "%d micro‑habits logged this week.";
+
+// Templates
+"templates_title" = "Starter Templates";
+"templates_add" = "Add";
+"template_water_blurb" = "Quick water sip to reset.";
+"template_stretch_blurb" = "60s desk stretch to unwind.";
+"template_inbox_blurb" = "Skim the inbox for 90s — no replies.";
 
 // Shortcuts
 "shortcut_log_habit_title" = "Log Habit";

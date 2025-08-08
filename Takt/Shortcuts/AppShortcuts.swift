@@ -4,7 +4,7 @@ struct TaktShortcuts: AppShortcutsProvider {
     static var shortcutTileColor: ShortcutTileColor = .blue
 
     static var appShortcuts: [AppShortcut] {
-        [
+        return [
             AppShortcut(
                 intent: LogHabitIntent(),
                 phrases: ["Log a habit in \(.applicationName)"],

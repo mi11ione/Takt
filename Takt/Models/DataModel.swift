@@ -20,16 +20,28 @@ final class Habit {
     var emoji: String
     var createdAt: Date
     var isFavorite: Bool
+    var defaultDurationSeconds: Int
+    var archivedAt: Date?
 
     @Relationship(deleteRule: .cascade, inverse: \HabitEntry.habit)
     var entries: [HabitEntry]
 
-    init(id: UUID = UUID(), name: String, emoji: String, createdAt: Date = .now, isFavorite: Bool = false) {
+    init(
+        id: UUID = UUID(),
+        name: String,
+        emoji: String,
+        createdAt: Date = .now,
+        isFavorite: Bool = false,
+        defaultDurationSeconds: Int = 60,
+        archivedAt: Date? = nil
+    ) {
         self.id = id
         self.name = name
         self.emoji = emoji
         self.createdAt = createdAt
         self.isFavorite = isFavorite
+        self.defaultDurationSeconds = defaultDurationSeconds
+        self.archivedAt = archivedAt
         entries = []
     }
 }
