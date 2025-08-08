@@ -231,7 +231,9 @@ struct HabitListView: View {
     private func moveHabit(from source: IndexSet, to destination: Int) {
         var items = filteredHabits
         items.move(fromOffsets: source, toOffset: destination)
-        for (index, h) in items.enumerated() { h.sortOrder = index }
+        for (index, h) in items.enumerated() {
+            h.sortOrder = index
+        }
         try? context.save()
     }
 

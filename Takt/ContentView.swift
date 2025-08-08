@@ -24,34 +24,34 @@ struct ContentView: View {
 
     var body: some View {
         listView
-        .navigationTitle(Text("takt_title"))
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    showPaywall = true
-                } label: {
-                    Image(systemName: "crown.fill")
-                        .font(.subheadline)
-                        .foregroundStyle(LinearGradient.primary)
+            .navigationTitle(Text("takt_title"))
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showPaywall = true
+                    } label: {
+                        Image(systemName: "crown.fill")
+                            .font(.subheadline)
+                            .foregroundStyle(LinearGradient.primary)
+                    }
+                    .sensoryFeedback(.impact(weight: .light), trigger: showPaywall)
                 }
-                .sensoryFeedback(.impact(weight: .light), trigger: showPaywall)
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                NavigationLink {
-                    SettingsView()
-                } label: {
-                    Image(systemName: "gearshape.fill")
-                        .font(.subheadline)
-                        .foregroundStyle(Color("PrimaryColor"))
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        SettingsView()
+                    } label: {
+                        Image(systemName: "gearshape.fill")
+                            .font(.subheadline)
+                            .foregroundStyle(Color("PrimaryColor"))
+                    }
+                    .accessibilityLabel(Text("takt_settings"))
                 }
-                .accessibilityLabel(Text("takt_settings"))
             }
-        }
-        .task {} // no-op; keep structure
-        .fullScreenCover(isPresented: Binding(get: { !hasOnboarded }, set: { _ in })) { OnboardingIntroView() }
-        .sheet(isPresented: $showPaywall) {
-            PaywallView()
-        }
+            .task {} // no-op; keep structure
+            .fullScreenCover(isPresented: Binding(get: { !hasOnboarded }, set: { _ in })) { OnboardingIntroView() }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
+            }
     }
 
     private var listView: some View {
