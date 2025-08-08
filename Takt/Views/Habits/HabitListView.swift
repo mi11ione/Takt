@@ -132,6 +132,9 @@ struct HabitListView: View {
         .sheet(item: Binding(get: { editorHabit }, set: { editorHabit = $0 })) { item in
             HabitEditorView(habit: item)
         }
+        .sheet(isPresented: $showEditor) {
+            HabitEditorView(habit: nil)
+        }
         .sheet(isPresented: $showTemplates) {
             NavigationStack { StarterTemplatesView() }
         }
