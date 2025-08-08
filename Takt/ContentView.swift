@@ -46,6 +46,8 @@ struct ContentView: View {
                 )
             }
         }
+        .transition(.opacity.combined(with: .scale))
+        .animation(.snappy, value: state)
         .navigationTitle(Text("takt_title"))
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
@@ -77,9 +79,8 @@ struct ContentView: View {
     }
 
     private var listView: some View {
-        NavigationStack {
-            HabitListView()
-        }
+        NavigationStack { HabitListView() }
+            .appBackground()
     }
 
     private func load() async {

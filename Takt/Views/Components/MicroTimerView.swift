@@ -10,6 +10,7 @@ struct MicroTimerView: View {
     @State private var remaining: Int
     @State private var isRunning: Bool = true
     @State private var didComplete: Bool = false
+    @State private var didStart: Bool = false
 
     init(habit: Habit) {
         self.habit = habit
@@ -20,29 +21,38 @@ struct MicroTimerView: View {
         VStack(spacing: 24) {
             Text(habit.emoji).font(.system(size: 64))
             Text(habit.name).font(.title2).bold()
-            ZStack {
-                Circle()
-                    .trim(from: 0, to: progress)
-                    .stroke(Color.accentColor, style: StrokeStyle(lineWidth: 10, lineCap: .round))
-                    .rotationEffect(.degrees(-90))
-                    .frame(width: 160, height: 160)
-                    .animation(.easeInOut(duration: 0.25), value: remaining)
-                Text(timeString).font(.title).monospacedDigit()
+            Card {
+                ZStack {
+                    Circle()
+                        .trim(from: 0, to: progress)
+                        .stroke(Color.accentColor, style: StrokeStyle(lineWidth: 10, lineCap: .round))
+                        .rotationEffect(.degrees(-90))
+                        .frame(width: 180, height: 180)
+                        .animation(.easeInOut(duration: 0.25), value: remaining)
+                        .scaleEffect(didStart ? 1.0 : 0.9)
+                        .animation(.spring(response: 0.35, dampingFraction: 0.7), value: didStart)
+                    Text(timeString).font(.largeTitle).monospacedDigit()
+                        .contentTransition(.numericText())
+                }
             }
             HStack(spacing: 16) {
                 Button(isRunning ? "timer_pause" : "timer_resume") { isRunning.toggle() }
-                    .buttonStyle(HapticButtonStyle())
+                    .buttonStyle(SecondaryButtonStyle())
                 Button("timer_cancel") { dismiss() }
-                    .tint(.secondary)
+                    .buttonStyle(SecondaryButtonStyle())
                 Button("timer_finish") { finishAndLog() }
-                    .buttonStyle(HapticButtonStyle())
+                    .buttonStyle(PrimaryButtonStyle())
             }
         }
         .padding()
         .navigationTitle(Text("timer_title"))
         .sensoryFeedback(.success, trigger: didComplete)
+        .sensoryFeedback(.alignment, trigger: isRunning)
         .task(id: isRunning) { await runIfNeeded() }
-        .task { await HabitActivityManager.shared.start(habitName: habit.name, durationSeconds: total) }
+        .task {
+            didStart = true
+            await HabitActivityManager.shared.start(habitName: habit.name, durationSeconds: total)
+        }
     }
 
     private var total: Int { max(10, habit.defaultDurationSeconds) }

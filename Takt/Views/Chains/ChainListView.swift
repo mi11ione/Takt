@@ -32,6 +32,8 @@ struct ChainListView: View {
                 }
             }
         }
+        .scrollContentBackground(.hidden)
+        .appBackground()
         .navigationTitle(Text("chains_title"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

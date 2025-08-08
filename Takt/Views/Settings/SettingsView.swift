@@ -84,6 +84,8 @@ struct SettingsView: View {
             }
         }
         .navigationTitle(Text("settings_title"))
+        .scrollContentBackground(.hidden)
+        .appBackground()
     }
 
     private func rescheduleNudges() {

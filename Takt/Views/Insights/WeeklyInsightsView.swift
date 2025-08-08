@@ -27,6 +27,8 @@ struct WeeklyInsightsView: View {
             }
         }
         .navigationTitle(Text("insights_title"))
+        .scrollContentBackground(.hidden)
+        .appBackground()
     }
 
     private func summaryText() -> Text {

@@ -1,103 +1,70 @@
-## Takt Roadmap (Revamped, iPhone‑Only)
+## Takt Design Roadmap (iPhone‑Only)
 
-This roadmap replaces the previous plan. It is iPhone‑focused and excludes iPad‑specific work. It removes items already implemented and presents a concise status plus a forward plan that fully covers the remaining features through five phases.
+All core functionality is complete. Remaining scope is design: visuals, motion, and layouts. This roadmap contains only three phases focused on design.
 
-### What Takt Is (Product North Star)
-Ultra‑fast micro‑habits (30–90s) you can complete instantly with delightful haptics. Focus on execution over planning. Surfaces: Lock Screen (widgets/live activities), App Shortcuts, and quick in‑app flows.
-
----
-
-## Current Capabilities (Quick Summary)
-The app today supports the following fully functional features:
-- Habit library: create, edit, archive/unarchive, favorites, quick log
-- Streaks: daily streak calculation and display
-- Timer: micro‑timer with pause/resume/cancel/finish; logs on completion; haptic feedback
-- Chains: create/edit (select + reorder), list/archiving, run chain step‑by‑step
-- Insights: weekly count, best hour, habit highlights (longest streaks)
-- Notifications: daypart nudges (morning/midday/afternoon/evening), opt‑in toggle in Settings
-- Templates: starter templates (quick add)
-- Paywall baseline: A/B after 3 logs (annual‑first policy placeholder)
-- App Shortcuts: example intents in place (Log Habit / Open Streaks / Add Habit)
-- Privacy & Analytics: Privacy Manifest stub, OSLog categories, MetricKit hooks
-
-Everything above is implemented in‑app and working on iPhone.
+### Completion Summary (already done)
+- Habits (create/edit/archive/favorites), Chains (build/run), Timer with Live Activity progress, Insights (weekly/best‑hour/highlights), Nudges with quiet hours + actions, Templates & Packs, Paywall baseline, App Shortcuts, Privacy/Analytics.
 
 ---
 
-## Out of Scope / Removed
-- iPad‑specific layout and keyboard shortcut work (not required; SwiftUI already scales reasonably on iPad)
-- Any previously listed items that are already built (to avoid duplication in the roadmap below)
+## Phase 1 — Visual System Foundation
+- Color & Theming
+  - Define semantic color tokens (accent, surface, card, separator, success, warning) with light/dark variants
+  - Apply consistent tint/foreground usage across all screens
+- Typography & Spacing
+  - Standardize text styles per surface (titles, headers, body, captions)
+  - Establish an 8‑pt spacing grid for paddings/margins across lists, cards, forms
+- Components
+  - Cards (rounded corners, subtle shadow), Badges/Pills, Callouts (info/success), Banners (non‑blocking)
+  - Buttons: primary/secondary/ghost styles building on `HapticButtonStyle`
+  - Empty state templates with iconography and actionable guidance
+- Iconography & Materials
+  - Consistent SF Symbols; size/weight rules; tasteful use of materials where appropriate
+- Widgets & Live Activity Visual Spec
+  - Finalize look for small/medium widgets and micro‑timer Live Activity (lock screen + island)
+
+Acceptance
+- Visuals cohesive in light/dark; spacing consistent; typography readable with Dynamic Type.
+
+Deliverables
+- Color tokens in Assets; component styles (CardStyle/CalloutStyle/Button variants); updated views applying the system; widget/live activity visual spec.
 
 ---
 
-## Phased Plan (All iPhone‑Only)
-Each phase is designed to be independently shippable. Together they cover 100% of features described here.
+## Phase 2 — Motion & Micro‑Interactions
+- Animations
+  - Micro‑timer: start/finish pulses; smooth progress updates; pause/resume affordances
+  - Chains: step transitions (advance/skip) with subtle motion cues
+  - Habit list: add/edit/archive transitions; section/header reveal
+- Haptic Choreography
+  - Map `.sensoryFeedback` to key moments: log success, chain complete, paywall present, template install
+- State‑Driven Motion
+  - Use `.phaseAnimator` and `.transition` to correlate motion with explicit states (idle/loading/loaded, running/paused/completed)
+- Performance Guardrails
+  - Ensure animations stay at 60fps; avoid layout thrash; measure with Instruments
 
-### Phase 1 — Feature Expansion (High‑Value Additions)
-- Interactive Widgets (Widget Extension)
-  - Small/medium/large + lock screen accessory
-  - Quick log, start timer, open chain, and open insights actions
-  - AppIntent configuration (favorite habit/chain); placeholders and redacted states
-- Live Activities (ActivityKit Target)
-  - Micro‑timer in Dynamic Island/Lock Screen; start/pause/resume/cancel/finish
-  - Progress updates tied to in‑app timer; dismissal policies
-- App Shortcuts Expansion
-  - Start timer for habit, start chain by name, log favorite
-  - Better phrases and disambiguation; Spotlight donation
-- Notifications (Nudges v1.1)
-  - Quick action from notification to log or start timer
-  - Quiet hours setting; per‑template opt‑out
+Acceptance
+- Motion clarifies state; haptics feel satisfying and not overused; consistent across screens.
 
-Acceptance: Widgets and Live Activities reliably execute actions; Shortcuts resolve naturally; nudges respect quiet hours and opt‑outs.
-
-### Phase 2 — Engaging & Complex Functionality
-- Recommendations (On‑device)
-  - Simple next‑best suggestion using recency, favorites, and time of day
-  - “Start recommended” action on habit list and widget
-- Templates & Packs v1
-  - Curated packs (Focus Reset, Study Sprint, Wind‑Down); add/remove with clear copy
-  - Template customization (duration/emoji) on add
-- Insights v1.5
-  - Weekly trend cards; chain depth evolution; personal best streaks
-  - Share Cards (image export) for streaks/chains
-
-Acceptance: Recommendations feel relevant (>60% acceptance on suggested starts in test cohort); packs install quickly; insights show meaningful trends under 10s scan time.
-
-### Phase 3 — Design Enhancements (Delight & Clarity)
-- Motion & Transitions
-  - Micro‑timer animations (start/finish pulses), chain step transitions, list interactions
-- Visual Design
-  - Consistent cards, color system, shadows, and vibrancy; refined widget visuals
-- Layout Polish
-  - Empty states, highlights, and banners; better grouping and spacing; improved iconography
-
-Acceptance: UI feels consistent and joyful; animations enhance clarity; accessible in light/dark and across Dynamic Type settings.
-
-### Phase 4 — Quality Pass (Bugs, Edge Cases, Perf)
-- Bug Fixes & Edge Cases
-  - Streak edge cases (time zone/day boundaries); chain interruptions; notification duplication
-- Performance
-  - Startup and interaction timing goals; smooth scrolling; timer accuracy checks
-- Accessibility
-  - VoiceOver descriptions for timer, chains, and insights; large hit targets; reduced motion fallbacks
-
-Acceptance: Zero known P1/P2 bugs; a11y checks pass; performance budgets met on iPhone test devices.
-
-### Phase 5 — Total Checkup (Store Readiness)
-- StoreKit 2 Finalization
-  - Product IDs, purchase/restore flows, verified entitlements, win‑back offers
-- App Store Package
-  - Screenshots (widget, timer, chain), preview video, localized copy, privacy text
-- Final QA
-  - TestFlight sign‑off; crash‑free sessions goal; final polish on copy and nudges
-
-Acceptance: App is archive‑clean; purchase flows verified; store assets uploaded; internal sign‑offs complete.
+Deliverables
+- Animation modifiers for timer/chain/list; haptic mapping table; updated views with transitions and validated performance.
 
 ---
 
-## Guarantees
-- All features described in this roadmap will be implemented within these phases.
-- iPhone experience remains first‑class; no iPad‑specific scope required.
-- Each phase stands on its own for incremental shipping.
+## Phase 3 — Layout Excellence & Theming Polish
+- Layout
+  - Harmonize grouped forms and lists; align paddings/headers/footers; safe‑area handling; home‑indicator spacing
+  - Polished empty/zero‑states with clear calls‑to‑action (Templates, Chains, Insights)
+- Theming
+  - Refine backgrounds (subtle gradients/materials); card elevations; highlight colors for recommended actions
+  - Consistent widget & live activity themes (icons, typography, spacing) in light/dark
+- Accessibility & Contrast
+  - Confirm color contrast; refine large‑text breakpoints; reduced‑motion alternates for key transitions
+
+Acceptance
+- App looks and feels unified; layouts intentional; accessible across Dynamic Type and high‑contrast; widgets/live activities visually consistent.
+
+Deliverables
+- Finalized layouts for Habits, Chains, Timer, Insights, Settings; widget/live activity theme kit; accessibility check report.
 
 

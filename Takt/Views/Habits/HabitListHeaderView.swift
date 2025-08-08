@@ -6,18 +6,18 @@ struct HabitListHeaderView: View {
 
     var body: some View {
         if let habit = recommended {
-            HStack(spacing: 12) {
-                Text(habit.emoji)
-                VStack(alignment: .leading) {
-                    Text("header_recommended_title").font(.caption).foregroundStyle(.secondary)
-                    Text(habit.name).font(.headline)
+            Card {
+                HStack(spacing: 12) {
+                    Text(habit.emoji)
+                    VStack(alignment: .leading) {
+                        Text("header_recommended_title").font(.caption).foregroundStyle(.secondary)
+                        Text(habit.name).font(.headline)
+                    }
+                    Spacer()
+                    Button("header_start") { onStart(habit) }
+                        .buttonStyle(PrimaryButtonStyle())
                 }
-                Spacer()
-                Button("header_start") { onStart(habit) }
-                    .buttonStyle(HapticButtonStyle())
             }
-            .padding(12)
-            .background(.quaternary, in: .rect(cornerRadius: 12))
         }
     }
 }

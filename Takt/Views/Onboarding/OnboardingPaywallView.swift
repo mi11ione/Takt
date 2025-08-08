@@ -11,8 +11,7 @@ struct OnboardingPaywallView: View {
 
             HStack(spacing: 12) {
                 Button("onb_paywall_continue_free") { hasOnboarded = true }
-                    .buttonStyle(HapticButtonStyle())
-                    .buttonBorderShape(.roundedRectangle)
+                    .buttonStyle(SecondaryButtonStyle())
 
                 Button("onb_paywall_subscribe") {
                     isProcessing = true
@@ -21,8 +20,7 @@ struct OnboardingPaywallView: View {
                         hasOnboarded = true
                     }
                 }
-                .buttonStyle(HapticButtonStyle())
-                .buttonBorderShape(.roundedRectangle)
+                .buttonStyle(PrimaryButtonStyle())
             }
 
             Button("onb_paywall_restore") {
@@ -33,6 +31,7 @@ struct OnboardingPaywallView: View {
         .padding()
         .navigationTitle(Text("onb_paywall_nav"))
         .disabled(isProcessing)
+        .appBackground()
     }
 }
 

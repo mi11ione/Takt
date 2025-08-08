@@ -12,16 +12,15 @@ struct OnboardingPermissionsView: View {
             Toggle("onb_permissions_notifications", isOn: $wantsNotifications)
                 .toggleStyle(.switch)
 
-            NavigationLink("onb_continue") {
-                OnboardingPaywallView()
-            }
-            .buttonStyle(HapticButtonStyle())
+            NavigationLink("onb_continue") { OnboardingPaywallView() }
+                .buttonStyle(PrimaryButtonStyle())
 
             Button("onb_skip") { hasOnboarded = true }
                 .tint(.secondary)
         }
         .padding()
         .navigationTitle(Text("onb_permissions_nav"))
+        .appBackground()
     }
 }
 

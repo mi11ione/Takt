@@ -12,14 +12,18 @@ struct StartChainView: View {
     var body: some View {
         VStack(spacing: 24) {
             if isComplete {
-                Image(systemName: "checkmark.seal.fill").font(.system(size: 56)).foregroundStyle(.green)
+                Image(systemName: "checkmark.seal.fill")
+                    .font(.system(size: 56))
+                    .foregroundStyle(.green)
+                    .transition(.scale.combined(with: .opacity))
                 Text("chain_complete_message").font(.title3)
             } else if let step = stepHabit {
                 Text(step.emoji).font(.system(size: 48))
+                    .transition(.move(edge: .leading).combined(with: .opacity))
                 Text(step.name).font(.title2).bold()
                 HStack(spacing: 16) {
-                    Button("chain_skip") { next() }.buttonStyle(HapticButtonStyle())
-                    Button("chain_log") { log(step) }.buttonStyle(HapticButtonStyle())
+                    Button("chain_skip") { withAnimation(.snappy) { next() } }.buttonStyle(SecondaryButtonStyle())
+                    Button("chain_log") { withAnimation(.snappy) { log(step) } }.buttonStyle(PrimaryButtonStyle())
                 }
             } else {
                 ContentUnavailableView("chains_unavailable", systemImage: "link")

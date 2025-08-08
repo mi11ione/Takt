@@ -54,9 +54,12 @@ struct HabitListView: View {
                             NavigationLink("chains_start_quick", destination: quickStartView(for: habit))
                         }
                     }
+                    .transition(.move(edge: .trailing).combined(with: .opacity))
                 }
             }
         }
+        .scrollContentBackground(.hidden)
+        .appBackground()
         .navigationTitle(Text("habits_title"))
         .toolbar { toolbar }
         .sheet(isPresented: $showEditor) {
@@ -185,21 +188,24 @@ private struct HabitRow: View {
     let onTimer: () -> Void
 
     var body: some View {
-        HStack(spacing: 12) {
-            Text(habit.emoji)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(habit.name).font(.headline)
-                Text(streakText(for: habit)).font(.footnote).foregroundStyle(.secondary)
+        Card {
+            HStack(spacing: 12) {
+                Text(habit.emoji)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(habit.name).font(.headline)
+                    Text(streakText(for: habit)).font(.footnote).foregroundStyle(.secondary)
+                }
+                Spacer()
+                Image(systemName: habit.isFavorite ? "star.fill" : "star")
+                    .foregroundStyle(habit.isFavorite ? .yellow : .secondary)
+                    .accessibilityLabel(Text("habits_favorite_star_accessibility"))
+                Button(action: onLog) { Image(systemName: "checkmark.circle.fill").foregroundStyle(.tint) }
+                    .buttonStyle(PrimaryButtonStyle())
+                Button(action: onTimer) { Image(systemName: "timer").foregroundStyle(.tint) }
+                    .buttonStyle(SecondaryButtonStyle())
             }
-            Spacer()
-            Image(systemName: habit.isFavorite ? "star.fill" : "star")
-                .foregroundStyle(habit.isFavorite ? .yellow : .secondary)
-                .accessibilityLabel(Text("habits_favorite_star_accessibility"))
-            Button(action: onLog) { Image(systemName: "checkmark.circle.fill").foregroundStyle(.tint) }
-                .buttonStyle(HapticButtonStyle())
-            Button(action: onTimer) { Image(systemName: "timer").foregroundStyle(.tint) }
-                .buttonStyle(HapticButtonStyle())
         }
+        .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
     }
 

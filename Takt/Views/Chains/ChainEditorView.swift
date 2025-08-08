@@ -56,6 +56,8 @@ struct ChainEditorView: View {
             ToolbarItem(placement: .topBarTrailing) { Button("common_save") { save() }.bold().disabled(name.trimmingCharacters(in: .whitespaces).isEmpty) }
             ToolbarItem(placement: .automatic) { EditButton() }
         }
+        .scrollContentBackground(.hidden)
+        .appBackground()
         .onAppear { if let chain { load(chain) } }
     }
 

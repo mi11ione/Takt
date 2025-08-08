@@ -18,10 +18,8 @@ struct OnboardingIntroView: View {
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
 
-                NavigationLink("onb_continue") {
-                    OnboardingPermissionsView()
-                }
-                .buttonStyle(HapticButtonStyle())
+                NavigationLink("onb_continue") { OnboardingPermissionsView() }
+                    .buttonStyle(PrimaryButtonStyle())
 
                 Button("onb_skip") {
                     hasOnboarded = true
@@ -30,6 +28,7 @@ struct OnboardingIntroView: View {
             }
             .padding()
         }
+        .appBackground()
         .sensoryFeedback(.success, trigger: hasOnboarded)
     }
 }
