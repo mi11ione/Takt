@@ -3,6 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     @Environment(\.subscriptionManager) private var subscriptions
     @Environment(\.openURL) private var openURL
+    @Environment(\.notificationScheduler) private var scheduler
     @AppStorage("iCloudSyncEnabled") private var iCloudSyncEnabled: Bool = true
     @AppStorage("notificationsEnabled") private var notificationsEnabled: Bool = true
 
@@ -22,6 +23,16 @@ struct SettingsView: View {
             Section(header: Text("settings_preferences")) {
                 Toggle("settings_icloud_sync", isOn: $iCloudSyncEnabled)
                 Toggle("settings_notifications", isOn: $notificationsEnabled)
+                    .onChange(of: notificationsEnabled) { _, newValue in
+                        Task {
+                            if newValue {
+                                _ = await scheduler.requestAuthorization()
+                                await scheduler.scheduleDaypartSuggestions(enabled: true)
+                            } else {
+                                await scheduler.scheduleDaypartSuggestions(enabled: false)
+                            }
+                        }
+                    }
             }
 
             Section(header: Text("settings_support_legal")) {

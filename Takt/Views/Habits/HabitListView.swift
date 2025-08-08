@@ -68,10 +68,11 @@ struct HabitListView: View {
     private var toolbar: some ToolbarContent {
         Group {
             ToolbarItem(placement: .topBarLeading) {
-                NavigationLink(destination: WeeklyInsightsView()) {
-                    Label("insights_title", systemImage: "chart.bar.fill")
-                }
-                .accessibilityLabel(Text("insights_title"))
+                Menu {
+                    NavigationLink(destination: WeeklyInsightsView()) { Label("insights_title", systemImage: "chart.bar.fill") }
+                    NavigationLink(destination: ChainListView()) { Label("chains_title", systemImage: "link") }
+                } label: { Image(systemName: "list.bullet") }
+                    .accessibilityLabel(Text("habits_nav_menu"))
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button { editorHabit = nil; showEditor = true } label: { Image(systemName: "plus") }

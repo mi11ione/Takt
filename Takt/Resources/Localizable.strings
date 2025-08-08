@@ -50,6 +50,13 @@
 "settings_preferences" = "Preferences";
 "settings_icloud_sync" = "iCloud Sync";
 "settings_notifications" = "Notifications";
+// Nudges
+"nudge_title" = "Quick nudge";
+"nudge_morning" = "Morning reset? 60s stretch feels great.";
+"nudge_midday" = "Midday micro‑habit? Quick water sip.";
+"nudge_afternoon" = "Afternoon focus reset?";
+"nudge_evening" = "Evening wind‑down: 60s stretch.";
+"nudge_now" = "Tiny action time — take a breath.";
 "settings_support_legal" = "Support & Legal";
 "settings_contact_support" = "Contact Support";
 "settings_privacy_policy" = "Privacy Policy";
@@ -97,6 +104,26 @@
 "template_water_blurb" = "Quick water sip to reset.";
 "template_stretch_blurb" = "60s desk stretch to unwind.";
 "template_inbox_blurb" = "Skim the inbox for 90s — no replies.";
+
+// Chains
+"chains_title" = "Chains";
+"chains_empty_title" = "No Chains Yet";
+"chains_empty_desc" = "Create a small sequence of micro‑habits to flow through.";
+"chains_add_first" = "Create your first chain";
+"chaineditor_new_title" = "New Chain";
+"chaineditor_edit_title" = "Edit Chain";
+"chaineditor_basics" = "Basics";
+"chaineditor_name_placeholder" = "Name your chain";
+"chaineditor_items" = "Items";
+"chaineditor_color" = "Color";
+"chaineditor_no_habits_hint" = "Add some habits first, then build a chain.";
+"chaineditor_select_hint" = "Tap to add habits below, then reorder.";
+"start_chain_title" = "Start Chain";
+"chains_unavailable" = "No chain available";
+"chain_skip" = "Skip";
+"chain_log" = "Log";
+"chain_complete_message" = "Chain complete. That momentum is real.";
+"habits_nav_menu" = "Navigate";
 
 // Shortcuts
 "shortcut_log_habit_title" = "Log Habit";

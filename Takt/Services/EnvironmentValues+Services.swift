@@ -12,6 +12,10 @@ private struct AnalyticsKey: EnvironmentKey {
     static let defaultValue: Analytics = DefaultAnalytics.shared
 }
 
+private struct NotificationSchedulerKey: EnvironmentKey {
+    static let defaultValue: NotificationScheduling = NotificationScheduler()
+}
+
 public extension EnvironmentValues {
     var networkClient: NetworkClient {
         get { self[NetworkClientKey.self] }
@@ -26,5 +30,10 @@ public extension EnvironmentValues {
     var analytics: Analytics {
         get { self[AnalyticsKey.self] }
         set { self[AnalyticsKey.self] = newValue }
+    }
+
+    var notificationScheduler: NotificationScheduling {
+        get { self[NotificationSchedulerKey.self] }
+        set { self[NotificationSchedulerKey.self] = newValue }
     }
 }

@@ -33,7 +33,12 @@ struct TaktApp: App {
 
 private extension TaktApp {
     static func makeModelContainer() -> ModelContainer {
-        let schema = DataModelSchema.current
+        let schema = Schema([
+            Habit.self,
+            HabitEntry.self,
+            Chain.self,
+            ChainItem.self,
+        ])
         if let container = try? ModelContainer(for: schema) {
             return container
         }
