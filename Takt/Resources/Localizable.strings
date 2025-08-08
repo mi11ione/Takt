@@ -1,0 +1,68 @@
+/* Base localization */
+
+// General
+"takt_title" = "Takt";
+"takt_settings" = "Settings";
+"takt_paywall" = "Go Pro";
+
+// Loading/Error/Empty
+"takt_loading_title" = "Preparing";
+"takt_loading_desc" = "Loading your micro‑habits…";
+"takt_error_title" = "Something went wrong";
+"takt_error_desc" = "Please try again shortly.";
+"takt_empty_title" = "No Habits Yet";
+"takt_empty_desc" = "Start with a tiny action — 30–90 seconds.";
+"takt_go_to_library" = "Browse";
+
+// Onboarding
+"onb_intro_title" = "Micro‑habits that actually stick";
+"onb_intro_subtitle" = "Ultra‑fast actions on Lock Screen, Widgets, and Watch.";
+"onb_continue" = "Continue";
+"onb_skip" = "Skip"
+;
+"onb_permissions_nav" = "Permissions";
+"onb_permissions_title" = "Stay on track";
+"onb_permissions_desc" = "We’ll send gentle nudges matched to your day.";
+"onb_permissions_notifications" = "Enable notifications";
+"onb_paywall_nav" = "Takt Pro";
+"onb_paywall_continue_free" = "Continue Free";
+"onb_paywall_subscribe" = "Subscribe";
+"onb_paywall_restore" = "Restore Purchases";
+
+// Paywall
+"paywall_title" = "Unlock Pro";
+"paywall_subtitle" = "Advanced analytics, templates, and multi‑device sync.";
+"paywall_benefit_speed" = "Faster micro‑actions with satisfying haptics";
+"paywall_benefit_streaks" = "Streak chains that keep you going";
+"paywall_benefit_analytics" = "Deeper insights and weekly reviews";
+"paywall_pricing_annual" = "$24.99/year — best value";
+"paywall_pricing_monthly" = "$4.99/month";
+
+// Settings
+"settings_title" = "Settings";
+"settings_subscription" = "Subscription";
+"settings_manage_subscription" = "Manage Subscription";
+"settings_restore_purchases" = "Restore Purchases";
+"settings_preferences" = "Preferences";
+"settings_icloud_sync" = "iCloud Sync";
+"settings_notifications" = "Notifications";
+"settings_support_legal" = "Support & Legal";
+"settings_contact_support" = "Contact Support";
+"settings_privacy_policy" = "Privacy Policy";
+"settings_terms" = "Terms of Use";
+"settings_about" = "About";
+"settings_version" = "Version";
+
+// Shortcuts
+"shortcut_log_habit_title" = "Log Habit";
+"shortcut_log_habit_desc" = "Log a quick habit in Takt";
+"shortcut_log_habit_done" = "Logged a habit";
+"shortcut_open_streaks_title" = "Open Streaks";
+"shortcut_open_streaks_desc" = "Open streaks in Takt";
+"shortcut_open_streaks_done" = "Opening Streaks";
+"shortcut_add_habit_title" = "Add Habit";
+"shortcut_add_habit_desc" = "Add a habit in Takt";
+"shortcut_add_habit_param_name" = "Habit name";
+"shortcut_add_habit_prompt" = "Please provide a habit name";
+
+
