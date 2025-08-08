@@ -1,0 +1,16 @@
+---
+description: Swift file scaffolding & structure
+globs: **/*.swift
+---
+
+When creating or updating Swift files
+- Place each major view/type in its own file within the appropriate folder (Models/, Views/, Components/, Extensions/, Widgets/, LiveActivities/, Resources/...).
+- Imports are explicit (no wildcard). Top-level doc comment describing responsibility and collaborators.
+- SwiftUI-first: no ViewModels. Use `@Environment` for dependencies and protocol-oriented seams for services.
+- Views: define explicit `ViewState` enums when relevant; use `.task` / `.task(id:)` for effects; compose subviews aggressively; add `#Preview` with sample data.
+- Services: protocol-oriented, stateless, `Sendable` where applicable; injected via `EnvironmentValues`.
+- Models: `@Model` + `@Relationship` for SwiftData; keep domain concerns pure; plan for migration.
+- Strings: use `LocalizedStringKey` and `Resources/Localizable.strings`.
+- Haptics: apply `.sensoryFeedback()` to interactive elements.
+- Tests: ensure new logic is unit-testable; include a matching test plan in PR description.
+- Project file: keep `.pbxproj` edits surgical when adding files to targets; do not modify build settings.

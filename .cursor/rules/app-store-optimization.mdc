@@ -1,0 +1,10 @@
+---
+description: App Store Optimization requirements
+alwaysApply: true
+---
+
+- Searchable content indexing with `CSSearchableItem`.
+- Universal Links.
+- Spotlight indexing using `CSSearchableItemAttributeSet`.
+- App Clip for a single‑feature subset if applicable.
+- Prepare for product page optimization (creative/test variants).

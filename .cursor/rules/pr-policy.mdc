@@ -1,0 +1,9 @@
+---
+description: Pull request policy for background agents
+alwaysApply: true
+---
+
+- Single-purpose PR; keep the diff minimal and scoped.
+- PR body must include: Summary, Scope (files/targets), Motivation, Risks & rollback plan, and any manual checks performed.
+- Reference relevant context files when applicable (e.g., `@prompt.md`, `@the-view-architecture.md`).
+- Do not merge; leave the PR open for human review.

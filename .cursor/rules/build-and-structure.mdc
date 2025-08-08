@@ -1,0 +1,39 @@
+---
+description: Build & deploy readiness and project structure
+alwaysApply: true
+---
+
+Assets & icons
+- Use asset catalogs for all images (2x/3x, dark mode variants, tinted SF Symbols).
+- Provide all icon sizes: app, widget variants, Live Activity.
+
+Launch & versioning
+- Launch screen configured via Info.plist. Maintain proper version/build numbering scheme. Set export compliance key.
+
+Archive readiness
+- Project must archive cleanly with Apple toolchains; no extra setup.
+
+Project layout (target structure)
+```
+AppName/
+  - AppNameApp.swift
+  - Models/
+    - DataModel.swift
+  - Views/
+    - ContentView.swift
+    - Onboarding/
+    - Settings/
+    - Features/
+  - Components/
+  - Extensions/
+  - Resources/
+    - Assets.xcassets
+    - Localizable.strings
+  - Widgets/
+    - AppWidget.swift
+    - WidgetViews/
+  - LiveActivities/
+```
+
+Outcomes
+- Immediately functional in Xcode. Subscription flow working with multiple tiers. Ready for TestFlight. Uses iOS 18+ features throughout.

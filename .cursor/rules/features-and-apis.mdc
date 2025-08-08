@@ -1,0 +1,17 @@
+---
+description: Required app features and modern iOS APIs
+alwaysApply: true
+---
+
+Every app must include
+- Onboarding (≤ 3 screens) tracked with `@AppStorage`.
+- Settings with: subscription management (StoreKit views), restore purchases, privacy policy link, terms link, contact support (mailto:), app version, iCloud sync toggle (if applicable), notification preferences.
+- Widgets: multiple sizes, interactive with AppIntent, Timeline provider, placeholders.
+- Live Activities: compact/expanded, Dynamic Island support, push update capability.
+- App Shortcuts: ≥ 3 App Intents; parameterized where possible; Spotlight integration.
+- RequestReview using the modern action API.
+
+Modern features to consider
+- ControlWidget: interactive widgets with multiple tap targets, widget suggestions.
+- iPad compatibility: keyboard shortcuts (even if phone‑first UI).
+- AirDrop sharing, SharePlay collaboration, Focus filters where appropriate.

@@ -1,0 +1,14 @@
+---
+description: SwiftData usage and persistence policy
+alwaysApply: true
+---
+
+Models & relations
+- Use `@Model` for domain types; define relations with `@Relationship` and appropriate deletion rules.
+
+Performance & access
+- Use `@Query` for view‑layer queries; keep models domain‑pure; avoid business logic in models.
+- Prefer background contexts for heavy operations.
+
+Sync & migration
+- Plan migrations; prefer automatic CloudKit sync where applicable.

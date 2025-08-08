@@ -1,0 +1,19 @@
+---
+description: Monetization model & StoreKit 2 requirements
+alwaysApply: true
+---
+
+Tiers (choose set based on app type)
+- Simple utilities: Free (3–5 uses/day), Pro $2.99/mo, Premium $4.99/mo, Lifetime $29.99.
+- Tracking/data apps: Free (1–2 items, 7d history), Pro $3.99/mo (5 items, 30d), Premium $6.99/mo (unlimited, export), Max $9.99/mo (AI insights). Annual: ~35% discount.
+- Social/multiplayer: Free (basic, 3 connections), Plus $2.99/mo (10 connections), Family $9.99/mo (6 users), Teams $19.99/mo (unlimited, admin).
+
+Implementation requirements
+- Paywall after onboarding or after 3 uses (A/B test‑ready).
+- StoreKit 2 with `Product.SubscriptionInfo`; define subscription groups for upgrade/downgrade.
+- Promotional offers; win‑back offers for cancelled users.
+- Receipt validation using `StoreKit.Transaction`.
+- Restore purchases in Settings.
+
+Constraints
+- No custom payment processing; use Apple IAP exclusively.

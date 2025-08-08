@@ -1,0 +1,14 @@
+---
+description: iOS agent guardrails for code-only edits
+alwaysApply: true
+---
+
+- Do not run terminal commands or external tools. Do not attempt: xcodebuild, xcrun, simctl, agvtool, instruments, pod, carthage, fastlane, bundler, ruby, npm, node.
+- Perform code-only changes. Create/update Swift files and related config files as instructed.
+- If adding files to a target, keep `.pbxproj` edits minimal and valid. Do not change build settings unless explicitly asked.
+- Do not bump versions or modify Info.plist build numbers unless the prompt asks for it.
+- Use only Apple native frameworks. Do not add third-party dependencies.
+- Target iOS 18.0+ and SwiftUI only (no UIKit unless explicitly requested).
+- No Combine, no GCD, no completion handlers; use Swift Concurrency (async/await, Task, TaskGroup, Actor).
+- Do not introduce ViewModels. Follow THE VIEW architecture rule.
+- Open a single PR per task with a concise summary and risks. Do not merge automatically.

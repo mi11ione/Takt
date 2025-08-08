@@ -1,0 +1,13 @@
+---
+description: Analytics, privacy, and security requirements
+alwaysApply: true
+---
+
+Analytics & performance
+- StoreKit 2 metrics. Custom events via `OSLog` with categories. Performance monitoring with Instruments signposts. Crash reporting via MetricKit.
+
+Security & privacy
+- App Transport Security enabled. Provide a Privacy Manifest file (`PrivacyInfo.xcprivacy`).
+- Request minimal permissions with clear descriptions. Prefer local processing over cloud.
+- Keychain for sensitive data only. No tracking without ATT permission.
+- No third‑party analytics SDKs.

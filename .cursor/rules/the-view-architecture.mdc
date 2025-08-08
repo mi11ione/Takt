@@ -1,0 +1,30 @@
+---
+description: THE VIEW — SwiftUI architecture rules
+alwaysApply: true
+---
+
+Principles
+- Views are value-type descriptions and pure functions of their state; compose via function composition.
+- No ViewModels. Views coordinate logic directly using SwiftUI state and environment.
+- Services are stateless, protocol-oriented, `Sendable`, and injected via `EnvironmentValues`.
+
+State management
+- Use the right owner: `@State` for local transient UI state; `@StateObject/@ObservedObject` only when reference semantics are necessary; `@Environment` for injected dependencies; `@Query` for persistence.
+- Prefer explicit state enums for exhaustiveness (idle/loading/loaded/error) and switch-driven rendering.
+- Single source of truth per data element; propagate downward.
+
+Side effects
+- Use `.task` / `.task(id:)` for cancellable, lifecycle‑bound effects. Prefer debounced `.task(id:)` instead of `onChange` for reactive updates.
+- Bind side effects to specific inputs via `.task(id:)` rather than global effects.
+
+Composition
+- Break views into focused, reusable components. Avoid premature abstractions; extract only when composition demands it.
+
+Testing
+- Unit test the service layer with protocol mocks. Introspect views’ states and structure in UI tests.
+
+Performance
+- Favor value semantics; avoid reference cycles. Embrace SwiftUI’s diffing model; keep view bodies simple and composable.
+
+Anti‑patterns (disallow)
+- Custom Combine publishers to glue state; manual bindings; duplicated state; global singletons for coordination.

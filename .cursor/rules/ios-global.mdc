@@ -1,0 +1,24 @@
+---
+description: iOS project global constraints and goals
+alwaysApply: true
+---
+
+Targets & frameworks
+- Minimum iOS 18. SwiftUI-only app; single app target with Widget Extension as needed.
+- Use latest Swift features (incl. macros). Use only Apple native frameworks.
+
+Architecture & concurrency
+- THE VIEW architecture; no ViewModels. Protocol-oriented services via Environment.
+- Swift Concurrency for all async work (async/await, Task/TaskGroup, AsyncStream, Actors).
+
+Core platform APIs to prefer
+- SwiftData for persistence, `@Observable` macro, `.sensoryFeedback()`, `NavigationStack`, `Inspector()`, `ContentUnavailableView`, Live Activities, interactive widgets (AppIntents), TipKit, `.scrollPosition()`, PhaseAnimator.
+
+UX baselines
+- Dynamic Type, dark mode, smooth spring animations, loading/empty states patterns, pull-to-refresh.
+
+Prohibitions
+- No deprecated APIs. No Combine/GCD/completion handlers. No third‑party dependencies. No custom payment processing.
+
+Build expectations
+- App compiles immediately in Xcode with zero extra setup; only Apple frameworks used.

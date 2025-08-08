@@ -1,0 +1,40 @@
+---
+description: Swift style and iOS 18+ conventions
+globs: **/*.swift
+---
+
+Project & language
+- Target iOS 18+. SwiftUI-only (no UIKit unless explicitly required). Latest Swift features, including macros where beneficial.
+- Use only Apple native frameworks. No third-party dependencies.
+
+Architecture & data flow
+- THE VIEW architecture (no ViewModels). Use SwiftUI data flow primitives: `@Observable`, `@State`, `@Binding`, `@Environment`, `@AppStorage`, `@SceneStorage`.
+- DI via `EnvironmentValues` and custom keys. Services are stateless, protocol-oriented, and injectable.
+
+Concurrency
+- Use Swift Concurrency for all async work: `async/await`, `Task`, `TaskGroup`, `AsyncStream`, `actor`. No Combine, no GCD, no completion handlers.
+- UI entry points are `@MainActor`. Prefer cancellable, lifecycle-bound effects via `.task` / `.task(id:)`.
+
+UI/UX requirements
+- Navigation: `NavigationStack` with value-based navigation. Prefer `.inspector()` for details when appropriate.
+- Haptics: use `.sensoryFeedback()` on all interactive elements: `.impact(.light)` on taps, `.impact(.medium)` for confirmations, `.success` for completions, `.warning` for destructive.
+- Accessibility: support Dynamic Type. Respect system color schemes; support Dark Mode using `.preferredColorScheme` when necessary.
+- Animations: smooth, tasteful animations using `.spring(duration: 0.3)`; use `PhaseAnimator` for complex/continuous effects.
+- States: `ProgressView` for loading; `ContentUnavailableView` for empty states; `.refreshable` for pull-to-refresh.
+- Scroll: `ScrollView` with `.scrollPosition()` when applicable.
+
+Code standards
+- One primary type/view per file. Keep functions small and cohesive. Prefer immutability; mark classes `final` when needed.
+- Strict access control. Avoid force unwrap/try; favor `guard` and explicit optional handling. Prefer typed errors (`enum ErrorType: Error`).
+- Localization: avoid hardcoded strings; use `LocalizedStringKey` and resource catalogs.
+- Documentation: add `///` summaries to public API; minimal, purposeful comments elsewhere.
+- Previews: add `#Preview` for all views with meaningful sample data.
+
+Persistence (SwiftData)
+- Use `@Model` for models, `@Relationship` for relations; prefer domain-pure models. Optimize with `@Query`. Plan for migrations; adopt CloudKit sync when appropriate.
+
+Testing hooks
+- Keep logic testable (protocol seams for services, pure functions). Provide lightweight initializers and dependency injection for tests.
+
+Prohibitions (enforced)
+- Do not introduce ViewModels. Do not use Combine/GCD/completion handlers. Do not add non-Apple dependencies.
