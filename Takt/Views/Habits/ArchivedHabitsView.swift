@@ -64,7 +64,7 @@ struct ArchivedHabitsView: View {
                             Button(isSelecting ? "Done" : "Select") { withAnimation { isSelecting.toggle(); if !isSelecting { selectedIds.removeAll() } } }
                                 .buttonStyle(SecondaryButtonStyle(isCompact: true))
                             if isSelecting {
-                                Button("Unarchive") {
+                                Button("Return") {
                                     withAnimation { bulkUnarchive() }
                                 }
                                 .buttonStyle(BouncyButtonStyle())

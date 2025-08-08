@@ -4,6 +4,7 @@ import SwiftUI
 /// - $4.99/month, $24.99/year (annual‑first), no trial. Annual ~35% discount.
 /// - Upgrade/downgrade within a single subscription group.
 struct PaywallView: View {
+    @Environment(\.subscriptionManager) private var subscriptions
     @State private var selectedPlan: PricingPlan = .annual
     @State private var showContent = false
 
@@ -98,6 +99,31 @@ struct PaywallView: View {
             }
             .opacity(showContent ? 1 : 0)
             .scaleEffect(showContent ? 1 : 0.95)
+
+            // Restore + Legal
+            VStack(spacing: 10) {
+                Button("settings_restore_purchases") {
+                    Task { try? await subscriptions.restorePurchases() }
+                }
+                .font(.footnote)
+                .foregroundStyle(Color("OnSurfaceSecondary"))
+
+                HStack(spacing: 12) {
+                    Link(destination: URL(string: "https://takt.app/privacy")!) {
+                        Text("settings_privacy_policy")
+                    }
+                    .font(.footnote)
+                    .foregroundStyle(Color("OnSurfaceSecondary"))
+
+                    Text("·").foregroundStyle(Color("OnSurfaceSecondary"))
+
+                    Link(destination: URL(string: "https://takt.app/terms")!) {
+                        Text("settings_terms")
+                    }
+                    .font(.footnote)
+                    .foregroundStyle(Color("OnSurfaceSecondary"))
+                }
+            }
         }
         .padding()
         .onAppear {
@@ -151,17 +177,17 @@ struct PricingCard: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text(title)
                                 .font(.headline)
-                                .foregroundStyle(isSelected ? .white : .primary)
+                                .foregroundStyle(Color.primary)
 
                             HStack(spacing: 4) {
                                 Text(price)
                                     .font(.title2)
                                     .fontWeight(.bold)
-                                    .foregroundStyle(isSelected ? .white : .primary)
+                                    .foregroundStyle(Color.primary)
 
                                 Text(period)
                                     .font(.subheadline)
-                                    .foregroundStyle(isSelected ? .white.opacity(0.8) : .secondary)
+                                    .foregroundStyle(Color.primary)
                             }
 
                             if let savings {
@@ -174,7 +200,7 @@ struct PricingCard: View {
                                         Capsule()
                                             .fill(isSelected ? .white.opacity(0.16) : Color("Success").opacity(0.12))
                                     )
-                                    .foregroundStyle(isSelected ? .white : Color("Success"))
+                                    .foregroundStyle(Color("Success"))
                             }
                         }
 

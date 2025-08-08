@@ -9,6 +9,7 @@ struct ChainListView: View {
     @State private var showEditor: Bool = false
     @State private var editingChain: Chain?
     @State private var showContent = false
+    @State private var showTemplates = false
 
     var body: some View {
         ScrollView {
@@ -102,9 +103,22 @@ struct ChainListView: View {
         .sheet(isPresented: $showEditor) {
             NavigationStack { ChainEditorView(chain: editingChain) }
         }
+        .sheet(isPresented: $showTemplates) {
+            NavigationStack { ChainStarterTemplatesView() }
+        }
         .onAppear {
             withAnimation(.spring(response: 0.8, dampingFraction: 0.8).delay(0.1)) {
                 showContent = true
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showTemplates = true
+                } label: {
+                    Image(systemName: "sparkles")
+                        .foregroundStyle(Color("PrimaryColor"))
+                }
             }
         }
     }

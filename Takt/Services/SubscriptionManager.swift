@@ -1,5 +1,6 @@
 import Foundation
 import StoreKit
+import UIKit
 
 /// StoreKit 2 subscription management abstraction.
 /// Pricing policy (annual‑first): $4.99/mo or $24.99/yr; no trial. Product IDs to be added later.
@@ -36,5 +37,14 @@ public struct StoreKitSubscriptionManager: SubscriptionManaging, Sendable {
         try await AppStore.sync()
     }
 
-    public func manageSubscriptions() async {}
+    public func manageSubscriptions() async {
+        // Present the system manage subscriptions sheet in the active window scene.
+        let windowScene: UIWindowScene? = await MainActor.run {
+            UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .first { $0.activationState == .foregroundActive }
+        }
+        guard let windowScene else { return }
+        try? await AppStore.showManageSubscriptions(in: windowScene)
+    }
 }

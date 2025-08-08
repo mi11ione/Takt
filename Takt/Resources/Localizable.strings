@@ -97,6 +97,7 @@
 "habiteditor_name_placeholder" = "Name (short and snappy)";
 "habiteditor_emoji_placeholder" = "Emoji";
 "habiteditor_duration_format" = "%d seconds";
+"habiteditor_notes_field" = "Add notes to the habit";
 "habiteditor_favorite" = "Add to favorites";
 
 // Insights

@@ -22,6 +22,7 @@ final class Habit {
     var isFavorite: Bool
     var defaultDurationSeconds: Int
     var archivedAt: Date?
+    var notes: String?
     var sourcePackId: String?
 
     @Relationship(deleteRule: .cascade, inverse: \HabitEntry.habit)
@@ -35,6 +36,7 @@ final class Habit {
         isFavorite: Bool = false,
         defaultDurationSeconds: Int = 60,
         archivedAt: Date? = nil,
+        notes: String? = nil,
         sourcePackId: String? = nil
     ) {
         self.id = id
@@ -44,6 +46,7 @@ final class Habit {
         self.isFavorite = isFavorite
         self.defaultDurationSeconds = defaultDurationSeconds
         self.archivedAt = archivedAt
+        self.notes = notes
         self.sourcePackId = sourcePackId
         entries = []
     }

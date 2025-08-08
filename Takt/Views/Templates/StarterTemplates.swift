@@ -50,7 +50,6 @@ struct StarterTemplatesView: View {
                         Image(systemName: "sparkles")
                             .font(.system(size: 50))
                             .foregroundStyle(LinearGradient.primary)
-                            .symbolEffect(.variableColor.iterative.reversing)
 
                         Text("Start with proven habits")
                             .font(.title2)
@@ -66,6 +65,7 @@ struct StarterTemplatesView: View {
                     .offset(y: showContent ? 0 : -20)
 
                     // Categories
+                    // Expand: mix curated suggestions with recents (if any) later
                     let categories = Dictionary(grouping: templates) { $0.category }
                     ForEach(Array(categories.keys).sorted(), id: \.self) { category in
                         VStack(alignment: .leading, spacing: 16) {

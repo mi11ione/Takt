@@ -86,6 +86,7 @@ struct SettingsView: View {
                                 isOn: $notificationsEnabled,
                                 color: Color("SecondaryColor")
                             )
+                            .padding(.leading, 4)
                             .onChange(of: notificationsEnabled) { _, newValue in
                                 Task {
                                     if newValue {

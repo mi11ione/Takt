@@ -11,6 +11,7 @@ struct HabitEditorView: View {
     @State private var emoji: String = "🔥"
     @State private var duration: Double = 60
     @State private var isFavorite: Bool = false
+    @State private var notes: String = ""
     @State private var showEmojiPicker = false
     @State private var showContent = false
 
@@ -119,6 +120,7 @@ struct HabitEditorView: View {
             nameField
             durationSelector
             favoriteToggle
+            notesField
         }
         .padding(.horizontal)
         .opacity(showContent ? 1 : 0)
@@ -198,6 +200,19 @@ struct HabitEditorView: View {
         }
     }
 
+    private var notesField: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Notes", systemImage: "note.text")
+                .font(.headline)
+                .foregroundStyle(Color("PrimaryColor"))
+
+            Card(style: .glass) {
+                TextField("habiteditor_notes_field", text: $notes)
+                    .font(.title3)
+            }
+        }
+    }
+
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
@@ -217,6 +232,7 @@ struct HabitEditorView: View {
         emoji = habit.emoji
         duration = Double(habit.defaultDurationSeconds)
         isFavorite = habit.isFavorite
+        notes = habit.notes ?? ""
     }
 
     private func save() {
@@ -225,8 +241,9 @@ struct HabitEditorView: View {
             habit.emoji = emoji
             habit.defaultDurationSeconds = Int(duration)
             habit.isFavorite = isFavorite
+            habit.notes = notes.isEmpty ? nil : notes
         } else {
-            let newHabit = Habit(name: name, emoji: emoji, isFavorite: isFavorite, defaultDurationSeconds: Int(duration))
+            let newHabit = Habit(name: name, emoji: emoji, isFavorite: isFavorite, defaultDurationSeconds: Int(duration), notes: notes.isEmpty ? nil : notes)
             context.insert(newHabit)
         }
         try? context.save()

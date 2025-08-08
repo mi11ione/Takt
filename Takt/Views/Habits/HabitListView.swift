@@ -15,6 +15,8 @@ struct HabitListView: View {
     @State private var timerHabit: Habit?
     @State private var showTimerSheet: Bool = false
     @State private var recommended: Habit?
+    @State private var recommendedMany: [Habit] = []
+    @State private var tick: Int = 0
 
     @Environment(\.subscriptionManager) private var subscriptions
     @Environment(\.analytics) private var analytics
@@ -25,9 +27,11 @@ struct HabitListView: View {
     var body: some View {
         List {
             Section {
-                HabitListHeaderView(recommended: recommended) { showTimer($0) }
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 8, trailing: 0))
+                if !recommendedMany.isEmpty {
+                    RecommendedStrip(habits: recommendedMany, onStart: { showTimer($0) }, onLog: { log(habit: $0) })
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 8, trailing: 0))
+                }
             }
             if habits.isEmpty {
                 Section {
@@ -83,6 +87,10 @@ struct HabitListView: View {
                     } onTimer: {
                         showTimer(habit)
                     }
+                    .onTapGesture {
+                        editorHabit = habit
+                        showEditor = true
+                    }
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         Button(role: .destructive) {
                             withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
@@ -120,6 +128,13 @@ struct HabitListView: View {
                 .transition(.scale.combined(with: .opacity))
             }
         }
+        .overlay(alignment: .bottom) {
+            if let active = TimerStore.shared.activeHabit, TimerStore.shared.remainingSeconds > 0 {
+                InlineTimerWidget(habit: active)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 12)
+            }
+        }
         .sheet(isPresented: $showEditor) {
             HabitEditorView(habit: editorHabit)
         }
@@ -129,14 +144,25 @@ struct HabitListView: View {
         .sheet(isPresented: $showArchived) {
             NavigationStack { ArchivedHabitsView() }
         }
-        .sheet(isPresented: $showTimerSheet) {
-            if let timerHabit { NavigationStack { MicroTimerView(habit: timerHabit) } }
+        .sheet(item: Binding(get: { timerHabit }, set: { timerHabit = $0 })) { item in
+            NavigationStack { MicroTimerView(habit: item) }
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
         }
         .onAppear { ensureABBucket() }
-        .task(id: habits.count + Int.random(in: 0 ... 1)) { computeRecommendation() }
+        .task(id: habits.count + tick) { computeRecommendation() }
+        .task(id: TimerStore.shared.remainingSeconds) {
+            // Nudge the view to refresh overlay progress roughly once a second
+            tick = Int.random(in: 0 ... Int.max)
+        }
+        .task {
+            // Lightweight ticker to keep overlay fresh without Combine
+            while true {
+                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                tick &+= 1
+            }
+        }
     }
 
     private var toolbar: some ToolbarContent {
@@ -193,8 +219,8 @@ struct HabitListView: View {
 
     private func showTimer(_ habit: Habit) {
         timerHabit = habit
-        // Defer toggling the sheet to the next runloop to avoid empty sheet when state updates in the same cycle
-        DispatchQueue.main.async { showTimerSheet = true }
+        // Keep TimerStore in sync for inline widget/live activity visibility
+        TimerStore.shared.start(for: habit, seconds: habit.defaultDurationSeconds)
     }
 
     private func toggleFavorite(_ habit: Habit) {
@@ -242,6 +268,7 @@ struct HabitListView: View {
 
     private func computeRecommendation() {
         recommended = RecommendationEngine().recommend(from: habits)?.habit
+        recommendedMany = RecommendationEngine().topRecommendations(from: habits, limit: 5)
     }
 
     private func firstChainAndIndex(for habit: Habit) -> (Chain, Int)? {
@@ -251,6 +278,42 @@ struct HabitListView: View {
         let ordered = chain.items.sorted { $0.order < $1.order }
         if let idx = ordered.firstIndex(where: { $0.habit?.id == habit.id }) { return (chain, idx) }
         return nil
+    }
+}
+
+private struct RecommendedStrip: View {
+    let habits: [Habit]
+    let onStart: (Habit) -> Void
+    let onLog: (Habit) -> Void
+
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                ForEach(habits, id: \ .id) { habit in
+                    Card(style: .glass) {
+                        HStack(spacing: 12) {
+                            Text(habit.emoji)
+                                .font(.title3)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(habit.name)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                Text(String(format: "%d min", habit.defaultDurationSeconds / 60))
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer(minLength: 8)
+                            Button(action: { onStart(habit) }) { Image(systemName: "timer") }
+                                .buttonStyle(IconButtonStyle(size: 34, backgroundColor: Color("PrimaryColor")))
+                            Button(action: { onLog(habit) }) { Image(systemName: "checkmark") }
+                                .buttonStyle(IconButtonStyle(size: 34, backgroundColor: Color("Success")))
+                        }
+                    }
+                    .frame(width: 260)
+                }
+            }
+            .padding(.horizontal)
+        }
     }
 }
 
@@ -336,6 +399,62 @@ private struct HabitRow: View {
         if streak == 0 { return NSLocalizedString("habits_streak_none", comment: "") }
         if streak == 1 { return NSLocalizedString("habits_streak_one", comment: "") }
         return String(format: NSLocalizedString("habits_streak_multi", comment: ""), streak)
+    }
+}
+
+// Inline timer widget shown at bottom of habit list when a timer is active
+private struct InlineTimerWidget: View {
+    let habit: Habit
+    @State private var animate = false
+    @Environment(\.modelContext) private var context
+
+    var body: some View {
+        Card(style: .glass) {
+            HStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(Color("PrimaryColor").opacity(0.08))
+                        .frame(width: 44, height: 44)
+                    Text(habit.emoji)
+                        .font(.title3)
+                }
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(habit.name)
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    Text(timeString)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
+                }
+
+                Spacer()
+
+                HStack(spacing: 12) {
+                    Button {
+                        if TimerStore.shared.isRunning { TimerStore.shared.pause() } else { TimerStore.shared.resume() }
+                    } label: {
+                        Image(systemName: TimerStore.shared.isRunning ? "pause.fill" : "play.fill")
+                    }
+                    .buttonStyle(IconButtonStyle(size: 40, backgroundColor: Color("SecondaryColor")))
+
+                    Button {
+                        TimerStore.shared.completeAndLog(using: context)
+                    } label: {
+                        Image(systemName: "checkmark")
+                            .fontWeight(.bold)
+                    }
+                    .buttonStyle(IconButtonStyle(size: 40, backgroundColor: Color("Success")))
+                }
+            }
+        }
+        .padding(.horizontal)
+    }
+
+    private var timeString: String {
+        let remaining = TimerStore.shared.remainingSeconds
+        return String(format: "%02d:%02d", remaining / 60, remaining % 60)
     }
 }
 

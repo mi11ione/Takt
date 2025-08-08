@@ -29,4 +29,26 @@ struct RecommendationEngine {
         if let best { return .init(habit: best, score: score(best)) }
         return nil
     }
+
+    func topRecommendations(from habits: [Habit], limit: Int = 3, now: Date = .now) -> [Habit] {
+        let calendar = Calendar.autoupdatingCurrent
+        guard !habits.isEmpty, limit > 0 else { return [] }
+        let hour = calendar.component(.hour, from: now)
+
+        func score(_ habit: Habit) -> Double {
+            var s: Double = 0
+            if habit.isFavorite { s += 2 }
+            if let last = habit.entries.map(\ .performedAt).max(), let diff = calendar.dateComponents([.hour], from: last, to: now).hour, diff < 2 {
+                s -= 3
+            }
+            if hour >= 7, hour <= 10, habit.defaultDurationSeconds <= 60 { s += 1 }
+            s += Double.random(in: 0 ... 0.3)
+            return s
+        }
+
+        return habits
+            .sorted { score($0) > score($1) }
+            .prefix(limit)
+            .map(\.self)
+    }
 }

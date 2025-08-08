@@ -95,15 +95,9 @@ struct ContentView: View {
                 Button {
                     showPaywall = true
                 } label: {
-                    ZStack {
-                        Circle()
-                            .fill(LinearGradient.primary.opacity(0.15))
-                            .frame(width: 36, height: 36)
-                        Image(systemName: "crown.fill")
-                            .font(.subheadline)
-                            .foregroundStyle(LinearGradient.primary)
-                            .symbolEffect(.pulse)
-                    }
+                    Image(systemName: "crown.fill")
+                        .font(.subheadline)
+                        .foregroundStyle(LinearGradient.primary)
                 }
                 .sensoryFeedback(.impact(weight: .light), trigger: showPaywall)
             }
@@ -111,14 +105,9 @@ struct ContentView: View {
                 NavigationLink {
                     SettingsView()
                 } label: {
-                    ZStack {
-                        Circle()
-                            .fill(Color("PrimaryColor").opacity(0.1))
-                            .frame(width: 36, height: 36)
-                        Image(systemName: "gearshape.fill")
-                            .font(.subheadline)
-                            .foregroundStyle(Color("PrimaryColor"))
-                    }
+                    Image(systemName: "gearshape.fill")
+                        .font(.subheadline)
+                        .foregroundStyle(Color("PrimaryColor"))
                 }
                 .accessibilityLabel(Text("takt_settings"))
             }

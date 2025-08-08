@@ -24,24 +24,24 @@ struct WeeklyInsightsView: View {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("insights_header")
                                     .font(.headline)
-                                    .foregroundStyle(Color("OnEmphasis").opacity(0.88))
+                                    .foregroundStyle(Color.primary)
 
                                 summaryText()
                                     .font(.largeTitle)
                                     .fontWeight(.bold)
-                                    .foregroundStyle(Color("OnEmphasis"))
+                                    .foregroundStyle(Color.primary.opacity(0.88))
                             }
 
                             Spacer()
 
                             ZStack {
                                 Circle()
-                                    .fill(Color("OnEmphasis").opacity(0.2))
+                                    .fill(Color.green.opacity(0.1))
                                     .frame(width: 80, height: 80)
 
                                 Image(systemName: "chart.line.uptrend.xyaxis")
                                     .font(.largeTitle)
-                                    .foregroundStyle(Color("OnEmphasis"))
+                                    .foregroundStyle(Color.primary)
                                     .symbolEffect(.pulse)
                             }
                         }
@@ -49,18 +49,18 @@ struct WeeklyInsightsView: View {
                         if let hour = InsightsEngine().mostConsistentHour(entries: entries) {
                             HStack {
                                 Image(systemName: "clock.fill")
-                                    .foregroundStyle(Color("OnEmphasis").opacity(0.88))
+                                    .foregroundStyle(Color.primary.opacity(0.88))
                                 Text(String(format: NSLocalizedString("insights_best_hour", comment: ""), hour))
-                                    .foregroundStyle(Color("OnEmphasis").opacity(0.88))
+                                    .foregroundStyle(Color.primary.opacity(0.88))
                                 Spacer()
                             }
                             .font(.subheadline)
                         } else {
                             HStack {
                                 Image(systemName: "clock.slash.fill")
-                                    .foregroundStyle(Color("OnEmphasis").opacity(0.88))
+                                    .foregroundStyle(Color.primary.opacity(0.88))
                                 Text("No consistent time yet")
-                                    .foregroundStyle(Color("OnEmphasis").opacity(0.88))
+                                    .foregroundStyle(Color.primary.opacity(0.88))
                                 Spacer()
                             }
                             .font(.subheadline)

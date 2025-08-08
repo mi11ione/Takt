@@ -111,8 +111,18 @@ struct MicroTimerView: View {
 
                 Spacer()
 
-                // Control buttons
-                HStack(spacing: 16) {
+                // Control buttons (equal size, spacing 30): Cancel (red), Pause/Play (yellow), Done (green)
+                HStack(spacing: 30) {
+                    Button {
+                        // Cancel timer
+                        Task { await HabitActivityManager.shared.end() }
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                            .font(.title2)
+                    }
+                    .buttonStyle(IconButtonStyle(size: 60, backgroundColor: Color("Danger")))
+
                     Button {
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
                             isRunning.toggle()
@@ -121,15 +131,7 @@ struct MicroTimerView: View {
                         Image(systemName: isRunning ? "pause.fill" : "play.fill")
                             .font(.title2)
                     }
-                    .buttonStyle(IconButtonStyle(size: 60, backgroundColor: Color("PrimaryColor")))
-
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.title3)
-                    }
-                    .buttonStyle(IconButtonStyle(size: 50, backgroundColor: Color("SecondaryColor")))
+                    .buttonStyle(IconButtonStyle(size: 60, backgroundColor: Color("Warning")))
 
                     Button {
                         finishAndLog()
@@ -153,7 +155,8 @@ struct MicroTimerView: View {
             withAnimation(.spring(response: 0.8, dampingFraction: 0.7).delay(0.2)) {
                 didStart = true
             }
-            await HabitActivityManager.shared.start(habitName: habit.name, durationSeconds: total)
+            // Keep TimerStore in sync for widget overlay when sheet is dismissed
+            TimerStore.shared.start(for: habit, seconds: total)
         }
     }
 

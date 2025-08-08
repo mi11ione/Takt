@@ -37,7 +37,6 @@ struct ChainEditorView: View {
                         } else {
                             ForEach(selected.indices, id: \.self) { i in
                                 HStack {
-                                    Image(systemName: "line.3.horizontal").foregroundStyle(Color("OnSurfaceSecondary"))
                                     Text(selected[i].emoji)
                                     Text(selected[i].name)
                                     Spacer()
