@@ -107,6 +107,15 @@
 "insights_weekly_multi" = "%d micro‑habits logged this week.";
 "insights_best_hour" = "Most consistent around %02d:00";
 "insights_highlights" = "Highlights";
+// Recommendations header
+"header_recommended_title" = "Recommended";
+"header_start" = "Start";
+
+// Packs
+"packs_title" = "Template Packs";
+"pack_focus_reset" = "Focus Reset";
+"pack_study_sprint" = "Study Sprint";
+"packs_install" = "Install Pack";
 
 // Templates
 "templates_title" = "Starter Templates";

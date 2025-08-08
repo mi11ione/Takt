@@ -14,6 +14,7 @@ struct HabitListView: View {
     @State private var showPaywall: Bool = false
     @State private var timerHabit: Habit?
     @State private var showTimerSheet: Bool = false
+    @State private var recommended: Habit?
 
     @Environment(\.subscriptionManager) private var subscriptions
     @Environment(\.analytics) private var analytics
@@ -23,6 +24,7 @@ struct HabitListView: View {
 
     var body: some View {
         List {
+            Section { HabitListHeaderView(recommended: recommended) { showTimer($0) } }
             if habits.isEmpty {
                 Section {
                     ContentUnavailableView {
@@ -73,6 +75,7 @@ struct HabitListView: View {
             PaywallView()
         }
         .onAppear { ensureABBucket() }
+        .task(id: habits.count + Int.random(in: 0 ... 1)) { computeRecommendation() }
     }
 
     private var toolbar: some ToolbarContent {
@@ -156,6 +159,10 @@ struct HabitListView: View {
     private func quickStartView(for habit: Habit) -> some View {
         // Start any chain containing this habit; fallback to timer if none
         MicroTimerView(habit: habit)
+    }
+
+    private func computeRecommendation() {
+        recommended = RecommendationEngine().recommend(from: habits)?.habit
     }
 }
 
