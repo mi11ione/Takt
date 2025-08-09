@@ -92,11 +92,11 @@ struct OnboardingPermissionsView: View {
                     NavigationLink("onb_continue") {
                         PaywallView()
                     }
-                    .simultaneousGesture(TapGesture().onEnded({
+                    .simultaneousGesture(TapGesture().onEnded {
                         Task {
                             if wantsNotifications { _ = await scheduler.requestAuthorization() }
                         }
-                    }))
+                    })
                     .buttonStyle(BouncyButtonStyle())
 
                     Button("onb_skip") {

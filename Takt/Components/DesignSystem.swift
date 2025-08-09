@@ -95,7 +95,7 @@ struct ModernCard<Content: View>: View {
 
 struct FloatingActionButton: View {
     let icon: String
-    var baseColor: Color = Color("PrimaryColor")
+    var baseColor: Color = .warning
     var mixColor: Color? = nil
     var mixFraction: Double = 0.0 // 0.0...1.0 applied as opacity overlay of mixColor
     let action: () -> Void
