@@ -95,6 +95,9 @@ struct ModernCard<Content: View>: View {
 
 struct FloatingActionButton: View {
     let icon: String
+    var baseColor: Color = Color("PrimaryColor")
+    var mixColor: Color? = nil
+    var mixFraction: Double = 0.0 // 0.0...1.0 applied as opacity overlay of mixColor
     let action: () -> Void
     @State private var isPressed = false
     @State private var isAnimating = false
@@ -108,10 +111,17 @@ struct FloatingActionButton: View {
         }) {
             ZStack {
                 Circle()
-                    .fill(LinearGradient.primary)
+                    .fill(baseColor)
                     .frame(width: 56, height: 56)
                     .scaleEffect(isPressed ? 0.9 : 1)
-                    .shadow(color: Color("PrimaryColor").opacity(0.22), radius: isPressed ? 6 : 10, y: isPressed ? 3 : 5)
+                    .shadow(color: baseColor.opacity(0.22), radius: isPressed ? 6 : 10, y: isPressed ? 3 : 5)
+
+                if let mixColor, mixFraction > 0 {
+                    Circle()
+                        .fill(mixColor.opacity(mixFraction))
+                        .frame(width: 56, height: 56)
+                        .allowsHitTesting(false)
+                }
 
                 Image(systemName: icon)
                     .font(.title2)

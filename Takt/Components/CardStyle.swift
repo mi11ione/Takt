@@ -61,6 +61,7 @@ struct Card<Content: View>: View {
         if style == .glass || style == .elevated {
             RoundedRectangle(cornerRadius: 20)
                 .stroke(Color("Border"), lineWidth: 1)
+                .allowsHitTesting(false)
         }
     }
 

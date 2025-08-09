@@ -102,8 +102,8 @@ struct HabitListView: View {
                         showTimer(habit)
                     }
                     .onTapGesture {
+                        // Open editor for this habit via item sheet only
                         editorHabit = habit
-                        showEditor = true
                     }
                     .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         Button(role: .destructive) {
@@ -116,7 +116,7 @@ struct HabitListView: View {
                     }
                     .contextMenu {
                         Button(habit.isFavorite ? "habits_unfavorite" : "habits_favorite") { toggleFavorite(habit) }
-                        Button("habits_edit") { editorHabit = habit; showEditor = true }
+                        Button("habits_edit") { editorHabit = habit }
                         if belongsToAnyChain(habit) {
                             NavigationLink("chains_start_quick", destination: quickStartView(for: habit))
                         }
@@ -133,6 +133,13 @@ struct HabitListView: View {
         .navigationTitle(Text("habits_title"))
         .navigationBarTitleDisplayMode(.large)
         .toolbar { toolbar }
+        .overlay(alignment: .bottom) {
+            if let active = TimerStore.shared.activeHabit, TimerStore.shared.remainingSeconds > 0, timerHabit == nil {
+                InlineTimerWidget(habit: active, onTap: { timerHabit = active })
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 12)
+            }
+        }
         .overlay(alignment: .bottomTrailing) {
             if !habits.isEmpty {
                 FloatingActionButton(icon: "plus") {
@@ -143,15 +150,9 @@ struct HabitListView: View {
                 .transition(.scale.combined(with: .opacity))
             }
         }
-        .overlay(alignment: .bottom) {
-            if let active = TimerStore.shared.activeHabit, TimerStore.shared.remainingSeconds > 0, timerHabit == nil {
-                InlineTimerWidget(habit: active, onTap: { timerHabit = active })
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 12)
-            }
-        }
         .sheet(item: Binding(get: { editorHabit }, set: { editorHabit = $0 })) { item in
             HabitEditorView(habit: item)
+                .onDisappear { editorHabit = nil }
         }
         .sheet(isPresented: $showEditor) {
             HabitEditorView(habit: nil)
@@ -176,7 +177,7 @@ struct HabitListView: View {
             ensureABBucket()
             refreshSuggestion()
         }
-        .task(id: habits.count + suggestionRefreshTimer) {
+        .task(id: suggestionRefreshTimer) {
             refreshSuggestion()
         }
         .task(id: TimerStore.shared.remainingSeconds) {

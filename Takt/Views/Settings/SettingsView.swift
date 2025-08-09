@@ -5,7 +5,7 @@ struct SettingsView: View {
     @Environment(\.openURL) private var openURL
     @Environment(\.notificationScheduler) private var scheduler
     @AppStorage("iCloudSyncEnabled") private var iCloudSyncEnabled: Bool = true
-    @AppStorage("notificationsEnabled") private var notificationsEnabled: Bool = true
+    @AppStorage("notificationsEnabled") private var notificationsEnabled: Bool = false
     // Nudges configuration
     @AppStorage("nudgeMorning") private var nudgeMorning: Bool = true
     @AppStorage("nudgeMidday") private var nudgeMidday: Bool = true
@@ -34,26 +34,21 @@ struct SettingsView: View {
                             .foregroundStyle(LinearGradient.primary)
                     }
 
-                    Card(style: .glass) {
-                        VStack(spacing: 10) {
-                            SettingRow(
-                                icon: "creditcard.fill",
-                                title: "settings_manage_subscription",
-                                trailing: AnyView(Image(systemName: "chevron.right").font(.caption).foregroundStyle(Color("OnSurfaceSecondary")))
-                            ) {
-                                Task { await subscriptions.manageSubscriptions() }
-                            }
+                    VStack(spacing: 12) {
+                        SettingActionCard(
+                            icon: "creditcard.fill",
+                            title: "settings_manage_subscription",
+                            trailing: AnyView(Image(systemName: "chevron.right").font(.caption).foregroundStyle(Color("OnSurfaceSecondary")))
+                        ) {
+                            Task { await subscriptions.manageSubscriptions() }
+                        }
 
-                            Divider()
-
-                            SettingRow(
-                                icon: "arrow.clockwise",
-                                title: "settings_restore_purchases",
-                                trailing: AnyView(EmptyView())
-                            ) {
-                                Task { try? await subscriptions.restorePurchases() }
-                            }
-                            .padding(.leading, 3)
+                        SettingActionCard(
+                            icon: "arrow.clockwise",
+                            title: "settings_restore_purchases",
+                            trailing: AnyView(EmptyView())
+                        ) {
+                            Task { try? await subscriptions.restorePurchases() }
                         }
                     }
                 }
@@ -315,6 +310,33 @@ struct NudgeToggle: View {
                 .tint(color)
                 .scaleEffect(0.8)
         }
+    }
+}
+
+// A fully-tappable settings action presented as a card
+private struct SettingActionCard: View {
+    let icon: String
+    let title: String
+    let trailing: AnyView
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Card(style: .glass) {
+                HStack(spacing: 12) {
+                    Image(systemName: icon)
+                        .foregroundStyle(LinearGradient.primary)
+                    Text(LocalizedStringKey(title))
+                        .font(.body)
+                        .foregroundStyle(Color("OnSurfacePrimary"))
+                    Spacer()
+                    trailing
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+        .buttonStyle(PlainButtonStyle())
+        .contentShape(Rectangle())
     }
 }
 

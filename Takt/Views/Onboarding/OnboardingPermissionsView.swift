@@ -2,7 +2,8 @@ import SwiftUI
 
 struct OnboardingPermissionsView: View {
     @AppStorage("hasOnboarded") private var hasOnboarded: Bool = false
-    @State private var wantsNotifications: Bool = true
+    @Environment(\.notificationScheduler) private var scheduler
+    @AppStorage("notificationsEnabled") private var wantsNotifications: Bool = false
     @State private var showContent = false
     @State private var animateIcon = false
 
@@ -91,6 +92,11 @@ struct OnboardingPermissionsView: View {
                     NavigationLink("onb_continue") {
                         PaywallView()
                     }
+                    .simultaneousGesture(TapGesture().onEnded({
+                        Task {
+                            if wantsNotifications { _ = await scheduler.requestAuthorization() }
+                        }
+                    }))
                     .buttonStyle(BouncyButtonStyle())
 
                     Button("onb_skip") {
@@ -113,6 +119,18 @@ struct OnboardingPermissionsView: View {
             animateIcon = true
             withAnimation(.spring(response: 0.8, dampingFraction: 0.8).delay(0.2)) {
                 showContent = true
+            }
+        }
+        .onChange(of: wantsNotifications) { _, newValue in
+            Task {
+                if newValue {
+                    _ = await scheduler.requestAuthorization()
+                } else {
+                    await scheduler.scheduleConfiguredDayparts(
+                        morning: false, midday: false, afternoon: false, evening: false,
+                        quietStartHour: 22, quietEndHour: 7
+                    )
+                }
             }
         }
     }
