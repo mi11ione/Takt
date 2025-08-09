@@ -7,6 +7,7 @@ struct Card<Content: View>: View {
     enum CardStyle {
         case elevated
         case glass
+        case dimmedGlass
         case gradient
         case flat
     }
@@ -43,6 +44,13 @@ struct Card<Content: View>: View {
                     RoundedRectangle(cornerRadius: 20)
                         .fill(LinearGradient.mesh.opacity(0.10))
                 )
+        case .dimmedGlass:
+            RoundedRectangle(cornerRadius: 20)
+                .fill(.thickMaterial)
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(LinearGradient.mesh.opacity(0.30))
+                )
         case .gradient:
             RoundedRectangle(cornerRadius: 20)
                 .fill(LinearGradient.primary.opacity(0.12))
@@ -67,7 +75,7 @@ struct Card<Content: View>: View {
 
     private var shadowColor: Color {
         switch style {
-        case .elevated, .glass:
+        case .elevated, .glass, .dimmedGlass:
             Color("PrimaryColor").opacity(0.08)
         case .gradient:
             Color("PrimaryColor").opacity(0.12)
@@ -82,6 +90,8 @@ struct Card<Content: View>: View {
             8
         case .glass:
             7
+        case .dimmedGlass:
+            7
         case .gradient:
             10
         case .flat:
@@ -91,7 +101,7 @@ struct Card<Content: View>: View {
 
     private var shadowY: CGFloat {
         switch style {
-        case .elevated, .glass:
+        case .elevated, .glass, .dimmedGlass:
             3
         case .gradient:
             4

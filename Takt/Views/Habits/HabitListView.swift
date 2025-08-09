@@ -134,21 +134,24 @@ struct HabitListView: View {
         .navigationBarTitleDisplayMode(.large)
         .toolbar { toolbar }
         .overlay(alignment: .bottom) {
-            if let active = TimerStore.shared.activeHabit, TimerStore.shared.remainingSeconds > 0, timerHabit == nil {
-                InlineTimerWidget(habit: active, onTap: { timerHabit = active })
+            VStack(alignment: .trailing, spacing: 12) {
+                if !habits.isEmpty {
+                    HStack { Spacer()
+                        FloatingActionButton(icon: "plus") {
+                            editorHabit = nil
+                            showEditor = true
+                        }
+                    }
                     .padding(.horizontal, 16)
-                    .padding(.bottom, 12)
-            }
-        }
-        .overlay(alignment: .bottomTrailing) {
-            if !habits.isEmpty {
-                FloatingActionButton(icon: "plus") {
-                    editorHabit = nil
-                    showEditor = true
                 }
-                .padding(20)
-                .transition(.scale.combined(with: .opacity))
+
+                if let active = TimerStore.shared.activeHabit, TimerStore.shared.remainingSeconds > 0, timerHabit == nil {
+                    InlineTimerWidget(habit: active, onTap: { timerHabit = active })
+                        .padding(.horizontal, 16)
+                }
             }
+            .padding(.bottom, 12)
+            .transition(.move(edge: .bottom).combined(with: .opacity))
         }
         .sheet(item: Binding(get: { editorHabit }, set: { editorHabit = $0 })) { item in
             HabitEditorView(habit: item)
