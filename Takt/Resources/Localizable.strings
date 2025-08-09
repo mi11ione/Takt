@@ -154,6 +154,22 @@
 
 // Widgets
 "widget_favorite_placeholder" = "Favorite Habit";
+"widget_quick_start_title" = "Quick Start";
+"widget_quick_start_desc" = "Start a favorite habit quickly";
+"widget_quick_start_display" = "Quick Start";
+"widget_favorites_title" = "Favorites";
+"widget_favorites_desc" = "Start from your favorites";
+"widget_today_title" = "Today Summary";
+"widget_today_desc" = "Your day at a glance";
+"widget_chain_title" = "Chain Progress";
+"widget_chain_desc" = "Next step in a chain";
+"widget_streak_title" = "Streak";
+"widget_streak_desc" = "Current streak badge";
+"widget_param_habit" = "Habit";
+
+// Widget buttons/text
+"widget_start_suggested" = "Start Suggested";
+"widget_nudge_me" = "Nudge me";
 
 // Shortcuts
 "shortcut_log_habit_title" = "Log Habit";

@@ -33,11 +33,13 @@ final class TimerStore {
         isRunning = false
         tickingTask?.cancel()
         tickingTask = nil
+        Task { await HabitActivityManager.shared.pause(remainingSeconds: remainingSeconds) }
     }
 
     func resume() {
         guard activeHabit != nil, remainingSeconds > 0 else { return }
         isRunning = true
+        Task { await HabitActivityManager.shared.resume() }
         startTicking()
     }
 
@@ -74,8 +76,6 @@ final class TimerStore {
                 if Task.isCancelled { return }
                 if !isRunning { break }
                 remainingSeconds -= 1
-                let progress = 1 - Double(remainingSeconds) / Double(totalSeconds)
-                await HabitActivityManager.shared.updateProgress(progress)
             }
             if remainingSeconds <= 0 {
                 // Auto-complete without logging; UI should explicitly log
@@ -86,6 +86,7 @@ final class TimerStore {
     }
 
     private func startLiveActivity() {
-        Task { await HabitActivityManager.shared.start(habitName: activeHabit?.name ?? "Habit", durationSeconds: totalSeconds) }
+        guard let habit = activeHabit else { return }
+        Task { await HabitActivityManager.shared.start(habit: habit, durationSeconds: totalSeconds) }
     }
 }

@@ -34,38 +34,23 @@ struct TaktApp: App {
                 DeepLinkRouter.shared.modelContainer = modelContainer
                 await DeepLinkRouter.shared.consumePendingAction()
             }
+            .onOpenURL { url in
+              Task { await DeepLinkRouter.shared.handle(url) }
+            }
         }
     }
 }
 
 private extension TaktApp {
     static func makeModelContainer() -> ModelContainer {
-        let schema = Schema([
-            Habit.self,
-            HabitEntry.self,
-            Chain.self,
-            ChainItem.self,
-        ])
-
+        // Use the shared App Group store if configured; otherwise fall back to local
         do {
-            // Create a persistent store configuration
-            let storeURL = URL.applicationSupportDirectory.appending(path: "Takt.sqlite")
-            let configuration = ModelConfiguration(url: storeURL, allowsSave: true)
-            let container = try ModelContainer(for: schema, configurations: [configuration])
-
-            // Ensure the directory exists
-            try FileManager.default.createDirectory(at: URL.applicationSupportDirectory, withIntermediateDirectories: true)
-
-            return container
+            return try ModelContainerFactory.makeSharedContainer()
         } catch {
-            // Log the error for debugging
-            print("Failed to create ModelContainer: \(error)")
-
-            // Try without custom configuration as fallback
+            print("Failed to create shared ModelContainer: \(error)")
             do {
-                return try ModelContainer(for: schema)
+                return try ModelContainer(for: DataModelSchema.current)
             } catch {
-                print("Failed to create default ModelContainer: \(error)")
                 preconditionFailure("Failed to initialize SwiftData ModelContainer: \(error)")
             }
         }

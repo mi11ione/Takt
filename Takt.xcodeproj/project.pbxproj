@@ -6,14 +6,106 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		33ECD0342E4789F400790260 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33ECD0332E4789F400790260 /* WidgetKit.framework */; };
+		33ECD0362E4789F400790260 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33ECD0352E4789F400790260 /* SwiftUI.framework */; };
+		33ECD0472E4789F600790260 /* TaskWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 33ECD0312E4789F400790260 /* TaskWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		33ECD0452E4789F600790260 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 33C0B30C2E457C9700AE85C5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 33ECD0302E4789F400790260;
+			remoteInfo = TaskWidgetsExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		33ECD04C2E4789F600790260 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				33ECD0472E4789F600790260 /* TaskWidgetsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		33C0B3142E457C9700AE85C5 /* Takt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Takt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		33ECD0312E4789F400790260 /* TaskWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TaskWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		33ECD0332E4789F400790260 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		33ECD0352E4789F400790260 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		33ECD05F2E4790A000790260 /* TaskWidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TaskWidgetsExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		33ECD0482E4789F600790260 /* Exceptions for "TaskWidgets" folder in "TaskWidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 33ECD0302E4789F400790260 /* TaskWidgetsExtension */;
+		};
+		33ECD04E2E478A5D00790260 /* Exceptions for "Takt" folder in "TaskWidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Extensions/OSLog+Categories.swift",
+				LiveActivities/HabitActivityAttributes.swift,
+				Models/Chain.swift,
+				Models/DataModel.swift,
+				Resources/Localizable.strings,
+				Services/HabitActivityManager.swift,
+				Services/InsightsEngine.swift,
+				Services/ModelContainerFactory.swift,
+				Services/NotificationScheduler.swift,
+				Services/RecommendationEngine.swift,
+				Services/StreakCalculator.swift,
+				Shortcuts/TaktShortcutsIntents.swift,
+				Widgets/ChainProgressWidget.swift,
+				Widgets/FavoritesGridWidget.swift,
+				Widgets/HabitLiveActivityWidget.swift,
+				Widgets/HabitWidget.swift,
+				Widgets/HabitWidgetScaffold.swift,
+				Widgets/QuickStartWidget.swift,
+				Widgets/StreakBadgeWidget.swift,
+				Widgets/TaktWidgetsBundle.swift,
+				Widgets/TodaySummaryWidget.swift,
+				WidgetsShared/HabitEntity.swift,
+			);
+			target = 33ECD0302E4789F400790260 /* TaskWidgetsExtension */;
+		};
+		33ECD10A2E479B5300790260 /* Exceptions for "Takt" folder in "Takt" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				Widgets/TaktWidgetsBundle.swift,
+			);
+			target = 33C0B3132E457C9700AE85C5 /* Takt */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		33C0B3162E457C9700AE85C5 /* Takt */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				33ECD10A2E479B5300790260 /* Exceptions for "Takt" folder in "Takt" target */,
+				33ECD04E2E478A5D00790260 /* Exceptions for "Takt" folder in "TaskWidgetsExtension" target */,
+			);
 			path = Takt;
+			sourceTree = "<group>";
+		};
+		33ECD0372E4789F400790260 /* TaskWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				33ECD0482E4789F600790260 /* Exceptions for "TaskWidgets" folder in "TaskWidgetsExtension" target */,
+			);
+			path = TaskWidgets;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -26,13 +118,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		33ECD02E2E4789F400790260 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				33ECD0362E4789F400790260 /* SwiftUI.framework in Frameworks */,
+				33ECD0342E4789F400790260 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		33C0B30B2E457C9700AE85C5 = {
 			isa = PBXGroup;
 			children = (
+				33ECD05F2E4790A000790260 /* TaskWidgetsExtension.entitlements */,
 				33C0B3162E457C9700AE85C5 /* Takt */,
+				33ECD0372E4789F400790260 /* TaskWidgets */,
+				33ECD0322E4789F400790260 /* Frameworks */,
 				33C0B3152E457C9700AE85C5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,8 +145,18 @@
 			isa = PBXGroup;
 			children = (
 				33C0B3142E457C9700AE85C5 /* Takt.app */,
+				33ECD0312E4789F400790260 /* TaskWidgetsExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		33ECD0322E4789F400790260 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				33ECD0332E4789F400790260 /* WidgetKit.framework */,
+				33ECD0352E4789F400790260 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -55,10 +169,12 @@
 				33C0B3102E457C9700AE85C5 /* Sources */,
 				33C0B3112E457C9700AE85C5 /* Frameworks */,
 				33C0B3122E457C9700AE85C5 /* Resources */,
+				33ECD04C2E4789F600790260 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				33ECD0462E4789F600790260 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				33C0B3162E457C9700AE85C5 /* Takt */,
@@ -69,6 +185,28 @@
 			productName = Takt;
 			productReference = 33C0B3142E457C9700AE85C5 /* Takt.app */;
 			productType = "com.apple.product-type.application";
+		};
+		33ECD0302E4789F400790260 /* TaskWidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 33ECD0492E4789F600790260 /* Build configuration list for PBXNativeTarget "TaskWidgetsExtension" */;
+			buildPhases = (
+				33ECD02D2E4789F400790260 /* Sources */,
+				33ECD02E2E4789F400790260 /* Frameworks */,
+				33ECD02F2E4789F400790260 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				33ECD0372E4789F400790260 /* TaskWidgets */,
+			);
+			name = TaskWidgetsExtension;
+			packageProductDependencies = (
+			);
+			productName = TaskWidgetsExtension;
+			productReference = 33ECD0312E4789F400790260 /* TaskWidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -81,6 +219,9 @@
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					33C0B3132E457C9700AE85C5 = {
+						CreatedOnToolsVersion = 26.0;
+					};
+					33ECD0302E4789F400790260 = {
 						CreatedOnToolsVersion = 26.0;
 					};
 				};
@@ -100,12 +241,20 @@
 			projectRoot = "";
 			targets = (
 				33C0B3132E457C9700AE85C5 /* Takt */,
+				33ECD0302E4789F400790260 /* TaskWidgetsExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		33C0B3122E457C9700AE85C5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		33ECD02F2E4789F400790260 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +271,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		33ECD02D2E4789F400790260 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		33ECD0462E4789F600790260 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 33ECD0302E4789F400790260 /* TaskWidgetsExtension */;
+			targetProxy = 33ECD0452E4789F600790260 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		33C0B31D2E457C9900AE85C5 /* Debug */ = {
@@ -251,11 +415,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Takt/Takt.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZZWB6X2U7F;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Takt/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Takt;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -290,11 +456,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Takt/Takt.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZZWB6X2U7F;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Takt/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Takt;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -324,6 +492,68 @@
 			};
 			name = Release;
 		};
+		33ECD04A2E4789F600790260 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = TaskWidgetsExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZZWB6X2U7F;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TaskWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TaskWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mi11ion.Takt.TaskWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		33ECD04B2E4789F600790260 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = TaskWidgetsExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZZWB6X2U7F;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TaskWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = TaskWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mi11ion.Takt.TaskWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -341,6 +571,15 @@
 			buildConfigurations = (
 				33C0B3202E457C9900AE85C5 /* Debug */,
 				33C0B3212E457C9900AE85C5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		33ECD0492E4789F600790260 /* Build configuration list for PBXNativeTarget "TaskWidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				33ECD04A2E4789F600790260 /* Debug */,
+				33ECD04B2E4789F600790260 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
