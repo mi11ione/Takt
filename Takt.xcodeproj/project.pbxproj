@@ -67,15 +67,8 @@
 				Services/RecommendationEngine.swift,
 				Services/StreakCalculator.swift,
 				Shortcuts/TaktShortcutsIntents.swift,
-				Widgets/ChainProgressWidget.swift,
-				Widgets/FavoritesGridWidget.swift,
 				Widgets/HabitLiveActivityWidget.swift,
-				Widgets/HabitWidget.swift,
-				Widgets/HabitWidgetScaffold.swift,
-				Widgets/QuickStartWidget.swift,
-				Widgets/StreakBadgeWidget.swift,
 				Widgets/TaktWidgetsBundle.swift,
-				Widgets/TodaySummaryWidget.swift,
 				WidgetsShared/HabitEntity.swift,
 			);
 			target = 33ECD0302E4789F400790260 /* TaskWidgetsExtension */;

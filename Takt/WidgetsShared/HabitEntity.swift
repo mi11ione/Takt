@@ -36,5 +36,3 @@ struct HabitQuery: EntityQuery {
         } catch { return [] }
     }
 }
-
-

@@ -35,7 +35,7 @@ struct TaktApp: App {
                 await DeepLinkRouter.shared.consumePendingAction()
             }
             .onOpenURL { url in
-              Task { await DeepLinkRouter.shared.handle(url) }
+                Task { await DeepLinkRouter.shared.handle(url) }
             }
         }
     }

@@ -168,6 +168,10 @@
 "widget_param_habit" = "Habit";
 
 // Widget buttons/text
+"widget_start" = "Start";
+"widget_done" = "Done";
+
+// Widget buttons/text
 "widget_start_suggested" = "Start Suggested";
 "widget_nudge_me" = "Nudge me";
 

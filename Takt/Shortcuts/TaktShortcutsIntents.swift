@@ -1,6 +1,6 @@
+import ActivityKit
 import AppIntents
 import SwiftData
-import ActivityKit
 import SwiftUI
 
 // MARK: - Intents
@@ -153,4 +153,3 @@ struct StartChainIntent: AppIntent {
         return .result(dialog: .init(stringLiteral: "Starting chain \(name)"))
     }
 }
-

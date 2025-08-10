@@ -21,5 +21,3 @@ enum ModelContainerFactory {
         return try ModelContainer(for: schema)
     }
 }
-
-

@@ -24,4 +24,3 @@ struct HabitActivityAttributes: ActivityAttributes {
 
     var title: String
 }
-
